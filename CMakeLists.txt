@@ -35,7 +35,7 @@ target_sources(
           "src/sleep_util.cpp"
           "src/texture.cpp"
           "src/texture_manager.cpp"
-          "src/main.cpp")
+          "src/main.cpp" "src/test_app.h" "src/test_app.cpp")
 target_link_libraries(bsg2 PRIVATE GLEW::GLEW glfw glm soil2)
 
 #add_custom_command(

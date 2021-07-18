@@ -5,7 +5,7 @@
 #include "asset_manager.h"
 
 class Shader {
-   public:
+public:
     GLuint program;
     inline Shader(GLuint program) : program(program) {}
 };

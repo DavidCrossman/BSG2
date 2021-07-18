@@ -1,10 +1,17 @@
 #include <iostream>
 
-#include "application.h"
+#include "test_app.h"
 
 int main(int argc, const char** argv) {
-    Application app;
-    app.mainloop();
+    TestApp app(1024, 768);
+    WindowConfiguration config;
+
+    config.name = "BSG2";
+    config.width = 1024;
+    config.height = 768;
+    config.frame_time_ms = 5;
+
+    execute(&app, config);
 
     return 0;
 }
