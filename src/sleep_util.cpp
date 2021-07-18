@@ -8,6 +8,7 @@
 
 #include "sleep_util.h"
 
+namespace bsg2 {
 SleepManager::SleepManager() {
 #ifdef _WIN32
 	TIMECAPS timecaps;
@@ -30,4 +31,5 @@ void SleepManager::sleep(int ms) {
 #else
 	std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 #endif
+}
 }

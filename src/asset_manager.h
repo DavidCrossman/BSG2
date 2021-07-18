@@ -2,17 +2,16 @@
 #include <map>
 #include <string>
 
-#include "asset.h"
-
+namespace bsg2 {
 void initialise_asset_managers();
 const std::string &get_asset_dir();
 
 template <class T>
 class AssetManager {
-   protected:
+protected:
     std::map<std::string, T *> assets;
 
-   public:
+public:
     AssetManager();
     ~AssetManager();
     virtual void load(std::string path) = 0;
@@ -39,4 +38,5 @@ template <class T>
 inline T *AssetManager<T>::load_get(std::string path) {
     if (assets.find(path) == assets.end()) load(path);
     return assets.find(path)->second;
+}
 }

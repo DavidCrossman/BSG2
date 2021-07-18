@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
+namespace bsg2 {
 class Camera {
 public:
 	glm::mat4 projection, view, combined;
@@ -16,3 +17,4 @@ public:
 	OrthographicCamera(glm::vec2 pos = glm::vec2(0), float rotation = 0, float zoom = 1);
 	void update() override;
 };
+}

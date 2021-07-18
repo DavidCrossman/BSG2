@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 
+namespace bsg2 {
 GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path) {
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -95,4 +96,5 @@ void ShaderManager::load(std::string path) {
     std::string fragment = qualified_path + "/fragment.glsl";
     GLuint program = load_shaders(vertex.c_str(), fragment.c_str());
     assets.emplace(path, new Shader(program));
+}
 }

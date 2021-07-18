@@ -25,14 +25,14 @@ void TestApp::initialise() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    batch = new Batch(shaders.load_get("base"));
+    batch = new bsg2::Batch(shaders.load_get("base"));
     
     cam.update();
 
     squares = textures.load_get("squares.png");
 }
 
-void TestApp::frame() {
+void TestApp::frame(int frame_count, float delta) {
     cam.update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
