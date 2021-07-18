@@ -12,24 +12,17 @@ void TestApp::framebuffer_size_callback(int width, int height) {
     cam.aspect_ratio = width / (float)height;
 }
 
-TestApp::TestApp(int width, int height) : width(width), height(height) {
+TestApp::TestApp(int width, int height) : width(width), height(height), batch(new bsg2::Batch(shaders.load_get("base"))), squares(textures.load_get("squares.png")) {
     cam.aspect_ratio = width / (float)height;
+    cam.update();
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 TestApp::~TestApp() {
     delete batch;
-}
-
-void TestApp::initialise() {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    batch = new bsg2::Batch(shaders.load_get("base"));
-    
-    cam.update();
-
-    squares = textures.load_get("squares.png");
 }
 
 void TestApp::frame(int frame_count, float delta) {
