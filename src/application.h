@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <functional>
 #include <vector>
 
 #include "camera.h"
@@ -11,7 +12,6 @@ class Application {
 public:
 	Application();
 	virtual ~Application();
-	virtual void initialise() = 0;
 	virtual void frame(int frame_count, float delta) = 0;
 	virtual void framebuffer_size_callback(int width, int height);
 };
@@ -25,5 +25,5 @@ struct WindowConfiguration {
 	GLFWmonitor* fullscreen_monitor;
 };
 
-void execute(Application* app, WindowConfiguration config = WindowConfiguration());
+void execute(std::function<Application* ()> create_application, WindowConfiguration config = WindowConfiguration());
 }

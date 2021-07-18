@@ -66,13 +66,13 @@ GLFWwindow* create_window(WindowConfiguration config) {
     return window;
 }
 
-void execute(Application* app, WindowConfiguration config) {
+void execute(std::function<Application* ()> create_application, WindowConfiguration config) {
     GLFWwindow* window = create_window(config);
-    glfwSetWindowUserPointer(window, app);
 
     initialise_asset_managers();
 
-    app->initialise();
+    Application* app = create_application();
+    glfwSetWindowUserPointer(window, app);
 
     SleepManager sleep_manager;
     constexpr int FRAMES_FOR_FPS = 100;

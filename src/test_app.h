@@ -17,7 +17,6 @@ public:
 	~TestApp() override;
 
 	glm::mat3 screen_to_world();
-	void initialise() override;
 	void frame(int frame_count, float delta) override;
 	void framebuffer_size_callback(int width, int height) override;
 };
