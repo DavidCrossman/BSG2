@@ -6,12 +6,13 @@
 
 #include "camera.h"
 
+namespace bsg2 {
 class Application {
 public:
 	Application();
 	virtual ~Application();
 	virtual void initialise() = 0;
-	virtual void frame() = 0;
+	virtual void frame(int frame_count, float delta) = 0;
 	virtual void framebuffer_size_callback(int width, int height);
 };
 
@@ -25,3 +26,4 @@ struct WindowConfiguration {
 };
 
 void execute(Application* app, WindowConfiguration config = WindowConfiguration());
+}

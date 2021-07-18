@@ -4,6 +4,7 @@
 
 using namespace glm;
 
+namespace bsg2 {
 constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
 
 Batch::Batch(Shader* shader)
@@ -36,7 +37,6 @@ Batch::Batch(Shader* shader)
 }
 
 Batch::~Batch() {
-    // glDeleteProgram(shader);
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo_pos);
     glDeleteBuffers(1, &vbo_colour);
@@ -137,4 +137,5 @@ void Batch::draw_rect(Vertex low, Vertex high) {
 	draw_vertex(v2);
 	draw_vertex(v3);
 	draw_vertex(v4);
+}
 }

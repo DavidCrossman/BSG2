@@ -4,6 +4,7 @@
 
 #include "asset_manager.h"
 
+namespace bsg2 {
 class Shader {
 public:
     GLuint program;
@@ -13,3 +14,4 @@ public:
 class ShaderManager : public AssetManager<Shader> {
     void load(std::string path) override;
 };
+}

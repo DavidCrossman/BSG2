@@ -27,7 +27,7 @@ add_executable(bsg2 "")
 target_sources(
   bsg2
   PRIVATE "src/application.cpp"
-          "src/asset.cpp"
+          
           "src/asset_manager.cpp"
           "src/batch.cpp"
           "src/camera.cpp"

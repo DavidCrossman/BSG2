@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+namespace bsg2 {
 std::string ASSET_DIR_PREFIX;
 
 // Returns 1 if if the directory exists.
@@ -49,3 +50,4 @@ void initialise_asset_managers() {
 }
 
 const std::string& get_asset_dir() { return ASSET_DIR_PREFIX; }
+}

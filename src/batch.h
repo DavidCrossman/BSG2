@@ -8,6 +8,7 @@
 #include "texture.h"
 #include "vertex.h"
 
+namespace bsg2 {
 class Batch {
     GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, vertex_count, indices_drawn, texture;
     Shader* shader;
@@ -16,7 +17,7 @@ class Batch {
     glm::vec2* vbo_tex_coords_mapped;
     GLuint* ibo_mapped;
 
-   public:
+public:
     glm::mat4 combined;
     Batch(Shader* shader);
     ~Batch();
@@ -29,3 +30,4 @@ class Batch {
     void draw_vertex(GLuint vertex_index);
     void draw_rect(Vertex low, Vertex high);
 };
+}

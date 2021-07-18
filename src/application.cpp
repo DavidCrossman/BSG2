@@ -16,6 +16,7 @@
 
 using namespace glm;
 
+namespace bsg2 {
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 
@@ -87,7 +88,6 @@ void execute(Application* app, WindowConfiguration config) {
 
         auto now = std::chrono::high_resolution_clock::now();
         auto end = now + min_frame_time;
-        float delta = std::chrono::duration_cast<std::chrono::microseconds>(now - last_frame).count() * 0.000001f; //TODO application field? 
         last_frame = now;
 
         if (frame_count % FRAMES_FOR_FPS == 0) {
@@ -98,7 +98,7 @@ void execute(Application* app, WindowConfiguration config) {
 
         glfwPollEvents();
 
-        app->frame();
+        app->frame(frame_count, std::chrono::duration_cast<std::chrono::microseconds>(now - last_frame).count() * 0.000001f);
 
         glFinish();
         glfwSwapBuffers(window);
@@ -111,4 +111,5 @@ void execute(Application* app, WindowConfiguration config) {
 
     glfwDestroyWindow(window);
     glfwTerminate();
+}
 }
