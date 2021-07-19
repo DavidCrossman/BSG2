@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "application.h"
-#include "batch.h"
-#include "texture_manager.h"
+#include "../src/application.h"
+#include "../src/batch.h"
+#include "../src/texture_manager.h"
 
 class TestApp : public bsg2::Application {
 	bsg2::ShaderManager shaders;
