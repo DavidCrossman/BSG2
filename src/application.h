@@ -9,11 +9,12 @@
 
 namespace bsg2 {
 class Application {
+protected:
+	GLFWwindow* window;
 public:
-	Application();
+	Application(GLFWwindow* window);
 	virtual ~Application();
 	virtual void frame(int frame_count, float delta) = 0;
-	virtual void framebuffer_size_callback(int width, int height);
 };
 
 struct WindowConfiguration {
@@ -25,5 +26,5 @@ struct WindowConfiguration {
 	GLFWmonitor* fullscreen_monitor;
 };
 
-void execute(std::function<Application* ()> create_application, WindowConfiguration config = WindowConfiguration());
+void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config = WindowConfiguration());
 }

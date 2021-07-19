@@ -13,10 +13,10 @@ class TestApp : public bsg2::Application {
 	bsg2::Texture* squares;
 	int width, height;
 public:
-	TestApp(int width, int height);
+	TestApp(GLFWwindow* window, int width, int height);
 	~TestApp() override;
 
 	glm::mat3 screen_to_world();
 	void frame(int frame_count, float delta) override;
-	void framebuffer_size_callback(int width, int height) override;
+	void resize(int width, int height);
 };
