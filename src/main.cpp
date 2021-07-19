@@ -10,7 +10,7 @@ int main(int argc, const char** argv) {
     config.height = 768;
     config.frame_time_ms = 5;
 
-    bsg2::execute([]() { return new TestApp(1024, 768); }, config);
+    bsg2::execute([](GLFWwindow* window) { return new TestApp(window, 1024, 768); }, config);
 
     return 0;
 }

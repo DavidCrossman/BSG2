@@ -17,18 +17,10 @@
 using namespace glm;
 
 namespace bsg2 {
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    glViewport(0, 0, width, height);
 
-    Application *app = (Application *)glfwGetWindowUserPointer(window);
-    app->framebuffer_size_callback(width, height);
-}
-
-Application::Application() {}
+Application::Application(GLFWwindow* window) : window(window) {}
 
 Application::~Application() {}
-
-void Application::framebuffer_size_callback(int width, int height) {}
 
 GLFWwindow* create_window(WindowConfiguration config) {
     glewExperimental = true;
@@ -52,8 +44,6 @@ GLFWwindow* create_window(WindowConfiguration config) {
 
     glfwSetWindowSizeLimits(window, config.min_width, config.min_height, config.max_width, config.max_height);
 
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
     glfwMakeContextCurrent(window);
 
     int glewInitResult = glewInit();
@@ -66,12 +56,12 @@ GLFWwindow* create_window(WindowConfiguration config) {
     return window;
 }
 
-void execute(std::function<Application* ()> create_application, WindowConfiguration config) {
+void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config) {
     GLFWwindow* window = create_window(config);
 
     initialise_asset_managers();
 
-    Application* app = create_application();
+    Application* app = create_application(window);
     glfwSetWindowUserPointer(window, app);
 
     SleepManager sleep_manager;
