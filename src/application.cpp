@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #include "batch.h"
 #include "shader.h"
@@ -66,9 +67,10 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
 
     SleepManager sleep_manager;
     constexpr int FRAMES_FOR_FPS = 100;
+    const float MAX_DELTA = config.max_delta;
     std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(config.frame_time_ms);
     unsigned long long frame_count = 0;
-    double fps = 0;
+    double fps = 0; //TODO implement getter
     auto last_frame = std::chrono::high_resolution_clock::now();
     auto last_fps_update = std::chrono::high_resolution_clock::now();
 
@@ -78,6 +80,7 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
 
         auto now = std::chrono::high_resolution_clock::now();
         auto end = now + min_frame_time;
+        auto diff = now - last_frame;
         last_frame = now;
 
         if (frame_count % FRAMES_FOR_FPS == 0) {
@@ -88,7 +91,7 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
 
         glfwPollEvents();
 
-        app->frame(frame_count, std::chrono::duration_cast<std::chrono::microseconds>(now - last_frame).count() * 0.000001f);
+        app->frame(frame_count, std::fminf(MAX_DELTA, std::chrono::duration_cast<std::chrono::microseconds>(diff).count() * 0.000001f));
 
         glFinish();
         glfwSwapBuffers(window);
