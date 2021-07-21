@@ -25,7 +25,7 @@ public:
     void end();
     void set_texture(GLuint texture_id);
     void set_texture(Texture* texture);
-    GLuint add_vertex(glm::vec3 pos, glm::vec4 colour, glm::vec2 tex_coords);
+    GLuint add_vertex(glm::vec2 pos, glm::vec4 colour, glm::vec2 tex_coords, float depth = 0);
     GLuint add_vertex(Vertex v);
     void draw_vertex(GLuint vertex_index);
     void draw_rect(Vertex low, Vertex high);
