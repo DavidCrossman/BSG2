@@ -107,14 +107,14 @@ void Batch::set_texture(GLuint texture_id) {
 void Batch::set_texture(Texture* texture) { set_texture(texture->id); }
 
 GLuint Batch::add_vertex(Vertex v) {
-    vbo_pos_mapped[vertex_count] = v.pos;
+    vbo_pos_mapped[vertex_count] = { v.pos, v.depth };
     vbo_colour_mapped[vertex_count] = v.colour;
     vbo_tex_coords_mapped[vertex_count] = v.tex_coords;
     return vertex_count++;
 }
 
-GLuint Batch::add_vertex(vec3 pos, vec4 colour, vec2 tex_coords) {
-    vbo_pos_mapped[vertex_count] = pos;
+GLuint Batch::add_vertex(vec2 pos, vec4 colour, vec2 tex_coords, float depth) {
+    vbo_pos_mapped[vertex_count] = { pos, depth };
     vbo_colour_mapped[vertex_count] = colour;
     vbo_tex_coords_mapped[vertex_count] = tex_coords; 
     return vertex_count++;
@@ -127,8 +127,8 @@ void Batch::draw_vertex(GLuint vertex_index) {
 
 void Batch::draw_rect(Vertex low, Vertex high) {
 	GLint v1 = add_vertex(low);
-	GLint v2 = add_vertex({ high.pos.x, low.pos.y, (low.pos.z + high.pos.z) * 0.5f }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y });
-	GLint v3 = add_vertex({ low.pos.x, high.pos.y, (low.pos.z + high.pos.z) * 0.5f }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y });
+	GLint v2 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
+	GLint v3 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
 	GLint v4 = add_vertex(high);
 
 	draw_vertex(v1);
