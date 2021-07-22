@@ -11,10 +11,10 @@ namespace bsg2 {
 struct WindowConfiguration {
 	WindowConfiguration() : width(1024), height(768), min_width(320), min_height(200), max_width(GLFW_DONT_CARE), max_height(GLFW_DONT_CARE),
 		frame_time_ms(16), name("Window"), gl_version_major(3), gl_version_minor(3), msaa_samples(4),
-		fullscreen_monitor(nullptr), max_delta(0.05f) {}
+		fullscreen_monitor(nullptr), max_delta(0.05f), icon_path("") {}
 	int width, height, min_width, min_height, max_width, max_height, frame_time_ms, gl_version_major, gl_version_minor, msaa_samples;
 	float max_delta;
-	const char* name;
+	const char *name, *icon_path;
 	GLFWmonitor* fullscreen_monitor;
 };
 

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <SOIL2/SOIL2.h>
 
 #include "batch.h"
 #include "shader.h"
@@ -45,6 +46,13 @@ GLFWwindow* create_window(WindowConfiguration config) {
 
     glfwSetWindowSizeLimits(window, config.min_width, config.min_height, config.max_width, config.max_height);
 
+    if (config.icon_path != "") {
+        GLFWimage icons[1];
+        icons[0].pixels = SOIL_load_image((get_asset_dir() + "textures/" + config.icon_path).c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+        glfwSetWindowIcon(window, 1, icons);
+        SOIL_free_image_data(icons[0].pixels);
+    }
+
     glfwMakeContextCurrent(window);
 
     int glewInitResult = glewInit();
@@ -58,9 +66,9 @@ GLFWwindow* create_window(WindowConfiguration config) {
 }
 
 void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config) {
-    GLFWwindow* window = create_window(config);
-
     initialise_asset_managers();
+
+    GLFWwindow* window = create_window(config);
 
     Application* app = create_application(window);
     glfwSetWindowUserPointer(window, app);
