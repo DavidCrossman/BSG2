@@ -19,7 +19,7 @@ using namespace glm;
 
 namespace bsg2 {
 
-Application::Application(GLFWwindow* window) : window(window) {}
+Application::Application(GLFWwindow* window) : window(window), fps(-1) {}
 
 Application::~Application() {}
 
@@ -70,7 +70,6 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
     const float MAX_DELTA = config.max_delta;
     std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(config.frame_time_ms);
     unsigned long long frame_count = 0;
-    double fps = 0; //TODO implement getter
     auto last_frame = std::chrono::high_resolution_clock::now();
     auto last_fps_update = std::chrono::high_resolution_clock::now();
 
@@ -86,7 +85,7 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
         if (frame_count % FRAMES_FOR_FPS == 0) {
             std::chrono::duration<double> time_since_fps_update = now - last_fps_update;
             last_fps_update = now;
-            fps = FRAMES_FOR_FPS / time_since_fps_update.count();
+            app->fps = FRAMES_FOR_FPS / time_since_fps_update.count();
         }
 
         glfwPollEvents();
