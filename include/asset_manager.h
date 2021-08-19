@@ -15,7 +15,7 @@ public:
     AssetManager();
     ~AssetManager();
     virtual void load(std::string path) = 0;
-    T *get(std::string path);
+    T *get(std::string path) const;
     T *load_get(std::string path);
 };
 
@@ -30,7 +30,7 @@ inline AssetManager<T>::~AssetManager() {
 }
 
 template <class T>
-inline T *AssetManager<T>::get(std::string path) {
+inline T *AssetManager<T>::get(std::string path) const {
     return assets.find(path)->second;
 }
 

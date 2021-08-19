@@ -5,7 +5,7 @@
 using namespace glm;
 
 namespace bsg2 {
-constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
+static constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
 
 Batch::Batch(Shader* shader)
     : combined(1.0),
@@ -92,6 +92,13 @@ void Batch::end() {
     glDisableVertexAttribArray(2);
 }
 
+void Batch::prepare(int vertices, int indices) {
+    if (indices_drawn + indices > MAX_INDEX_COUNT || vertex_count + vertices > MAX_VERTEX_COUNT) {
+        end();
+        begin();
+    }
+}
+
 void Batch::set_texture(GLuint texture_id) {
     if (texture_id == texture) return;
     texture = texture_id;
@@ -106,17 +113,14 @@ void Batch::set_texture(GLuint texture_id) {
 
 void Batch::set_texture(Texture* texture) { set_texture(texture->id); }
 
-GLuint Batch::add_vertex(Vertex v) {
-    vbo_pos_mapped[vertex_count] = { v.pos, v.depth };
-    vbo_colour_mapped[vertex_count] = v.colour;
-    vbo_tex_coords_mapped[vertex_count] = v.tex_coords;
-    return vertex_count++;
+GLuint Batch::add_vertex(const Vertex& v) {
+    return add_vertex(v.pos, v.colour, v.tex_coords, v.depth);
 }
 
-GLuint Batch::add_vertex(vec2 pos, vec4 colour, vec2 tex_coords, float depth) {
+GLuint Batch::add_vertex(const vec2& pos, const vec4& colour, const vec2& tex_coords, float depth) {
     vbo_pos_mapped[vertex_count] = { pos, depth };
     vbo_colour_mapped[vertex_count] = colour;
-    vbo_tex_coords_mapped[vertex_count] = tex_coords; 
+    vbo_tex_coords_mapped[vertex_count] = tex_coords;
     return vertex_count++;
 }
 
@@ -125,7 +129,8 @@ void Batch::draw_vertex(GLuint vertex_index) {
     indices_drawn++;
 }
 
-void Batch::draw_rect(Vertex low, Vertex high) {
+void Batch::draw_rect(const Vertex& low, const Vertex& high) {
+    prepare(4, 6);
 	GLint v1 = add_vertex(low);
 	GLint v2 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
 	GLint v3 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
