@@ -39,10 +39,6 @@ void TestApp::frame(int frame_count, float delta) {
     batch->combined = cam.combined;
     batch->begin();
     batch->set_texture(squares);
-    batch->draw_rect({ vec3(0.1, 0.1, 0), vec4(1), vec2(0, 0) }, { vec3(0.5, 0.5, 0), vec4(1), vec2(1, 1) });
+    batch->draw_rect({ vec2(0.1, 0.1), vec4(1), vec2(0, 0) }, { vec2(0.5, 0.5), vec4(1), vec2(1, 1) });
     batch->end();
-}
-
-mat3 TestApp::screen_to_world() {
-    return mat3(2.0 / width, 0, 0, 0, -2.0 / height, 0, -1, 1, 1);
 }
