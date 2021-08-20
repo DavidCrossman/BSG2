@@ -19,6 +19,7 @@ public:
     Shader* shader;
     glm::mat4 combined;
     Batch(Shader* shader);
+    Batch(const Batch& other) = delete;
     ~Batch();
     void begin();
     void end();
@@ -29,5 +30,7 @@ public:
     GLuint add_vertex(const Vertex& v);
     void draw_vertex(GLuint vertex_index);
     void draw_rect(const Vertex& low, const Vertex& high);
+    void draw_tri(const Vertex& v0, const Vertex& v1, const Vertex& v2);
+    void draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
 };
 }
