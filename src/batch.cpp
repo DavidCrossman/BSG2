@@ -131,16 +131,41 @@ void Batch::draw_vertex(GLuint vertex_index) {
 
 void Batch::draw_rect(const Vertex& low, const Vertex& high) {
     prepare(4, 6);
-	GLint v1 = add_vertex(low);
-	GLint v2 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
-	GLint v3 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
-	GLint v4 = add_vertex(high);
 
-	draw_vertex(v1);
-	draw_vertex(v2);
-	draw_vertex(v3);
-	draw_vertex(v2);
-	draw_vertex(v3);
-	draw_vertex(v4);
+	GLint i0 = add_vertex(low);
+	GLint i1 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
+	GLint i2 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
+	GLint i3 = add_vertex(high);
+
+	draw_vertex(i0);
+	draw_vertex(i1);
+	draw_vertex(i2);
+	draw_vertex(i1);
+	draw_vertex(i2);
+	draw_vertex(i3);
+}
+
+void Batch::draw_tri(const Vertex& v0, const Vertex& v1, const Vertex& v2) {
+    prepare(3, 3);
+
+	draw_vertex(add_vertex(v0));
+	draw_vertex(add_vertex(v1));
+	draw_vertex(add_vertex(v2));
+}
+
+void Batch::draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3) {
+    prepare(4, 6);
+
+    GLint i0 = add_vertex(v0);
+    GLint i1 = add_vertex(v1);
+    GLint i2 = add_vertex(v2);
+    GLint i3 = add_vertex(v3);
+
+    draw_vertex(i0);
+    draw_vertex(i1);
+    draw_vertex(i2);
+    draw_vertex(i0);
+    draw_vertex(i2);
+    draw_vertex(i3);
 }
 }
