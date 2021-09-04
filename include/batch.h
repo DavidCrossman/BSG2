@@ -16,16 +16,16 @@ class Batch {
     GLuint* ibo_mapped;
 
 public:
-    Shader* shader;
+    const Shader* shader;
     glm::mat4 combined;
-    Batch(Shader* shader);
+    Batch(const Shader* shader);
     Batch(const Batch& other) = delete;
     ~Batch();
     void begin();
     void end();
     void prepare(int vertices, int indices);
     void set_texture(GLuint texture_id);
-    void set_texture(Texture* texture);
+    void set_texture(const Texture* texture);
     GLuint add_vertex(const glm::vec2& pos, const glm::vec4& colour, const glm::vec2& tex_coords, float depth = 0);
     GLuint add_vertex(const Vertex& v);
     void draw_vertex(GLuint vertex_index);

@@ -16,8 +16,6 @@
 #include "texture_manager.h"
 #include "vertex.h"
 
-using namespace glm;
-
 namespace bsg2 {
 
 Application::Application(GLFWwindow* window) : window(window), fps(-1) {}
@@ -66,8 +64,6 @@ GLFWwindow* create_window(WindowConfiguration config) {
 }
 
 void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config) {
-    initialise_asset_managers();
-
     GLFWwindow* window = create_window(config);
 
     Application* app = create_application(window);

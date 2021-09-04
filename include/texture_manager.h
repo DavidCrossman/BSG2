@@ -5,6 +5,6 @@
 
 namespace bsg2 {
 class TextureManager : public AssetManager<Texture> {
-    void load(std::string path) override;
+    void load(const std::string& path) override;
 };
 }

@@ -1,6 +1,6 @@
 #include "test_app.h"
 
-using namespace glm;
+using glm::vec2, glm::vec4;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
