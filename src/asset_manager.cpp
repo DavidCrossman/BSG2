@@ -28,11 +28,13 @@ int dir_exists(const char* const path) {
     return (info.st_mode & S_IFDIR) ? 1 : 0;
 }
 
-void initialise_asset_managers() {
-    ASSET_DIR_PREFIX = "assets/";
+void initialise_asset_managers(const std::string& asset_dir) {
+    static const unsigned int MAX_ASSET_DIR_LENGTH = 400;
+    ASSET_DIR_PREFIX = asset_dir;
     while (true) {
         // Check if the assets directory exists. If not, go up a directory and check again.
         int result = dir_exists(ASSET_DIR_PREFIX.c_str());
+        if (ASSET_DIR_PREFIX.size() > MAX_ASSET_DIR_LENGTH) result = -1;
         switch (result) {
             case 1:
                 // Directory exists.

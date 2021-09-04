@@ -12,6 +12,6 @@ public:
 };
 
 class ShaderManager : public AssetManager<Shader> {
-    void load(std::string path) override;
+    void load(const std::string& path) override;
 };
 }

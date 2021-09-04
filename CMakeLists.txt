@@ -41,5 +41,5 @@ set(CUSTOM_INSTALL_DIR ${PROJECT_SOURCE_DIR}/../../Libraries/bsg2)
 install(TARGETS bsg2 ARCHIVE DESTINATION ${CUSTOM_INSTALL_DIR}/lib)
 install(FILES ${BSG2_HEADERS} DESTINATION ${CUSTOM_INSTALL_DIR}/include/bsg2)
 
-add_executable(bsg2_example ${BSG2_SOURCES} "examples/main.cpp" "examples/test_app.cpp")
+add_executable(bsg2_example ${BSG2_SOURCES} "examples/test_app/main.cpp" "examples/test_app/test_app.cpp")
 target_link_libraries(bsg2_example PRIVATE GLEW::GLEW glfw glm soil2)

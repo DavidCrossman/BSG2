@@ -2,7 +2,11 @@
 
 #include "test_app.h"
 
+#include <filesystem>
+
 int main(int argc, const char** argv) {
+    bsg2::initialise_asset_managers("examples/test_app/assets/");
+
     bsg2::WindowConfiguration config;
 
     config.name = "BSG2";

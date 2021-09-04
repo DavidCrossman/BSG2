@@ -20,7 +20,7 @@ struct WindowConfiguration {
 
 class Application {
 protected:
-	GLFWwindow* window;
+	GLFWwindow* window; // * const ?
 	float fps;
 public:
 	Application(GLFWwindow* window);

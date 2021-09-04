@@ -7,90 +7,93 @@
 #include <vector>
 
 namespace bsg2 {
-GLuint load_shaders(const char *vertex_file_path, const char *fragment_file_path) {
+
+// Adapted from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
+GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path) {
     // Create the shaders
-    GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-    GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+    GLuint vertex_id = glCreateShader(GL_VERTEX_SHADER);
+    GLuint fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
 
     // Read the Vertex Shader code from the file
-    std::string VertexShaderCode;
-    std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
-    if (VertexShaderStream.is_open()) {
+    std::string vertex_code;
+    std::ifstream vertex_stream(vertex_file_path, std::ios::in);
+    if (vertex_stream.is_open()) {
         std::stringstream sstr;
-        sstr << VertexShaderStream.rdbuf();
-        VertexShaderCode = sstr.str();
-        VertexShaderStream.close();
-    } else {
+        sstr << vertex_stream.rdbuf();
+        vertex_code = sstr.str();
+        vertex_stream.close();
+    }
+    else {
         std::cerr << "ERROR: Could not open " << vertex_file_path << std::endl;
         return 0;
     }
 
     // Read the Fragment Shader code from the file
-    std::string FragmentShaderCode;
-    std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
-    if (FragmentShaderStream.is_open()) {
+    std::string fragment_code;
+    std::ifstream fragment_stream(fragment_file_path, std::ios::in);
+    if (fragment_stream.is_open()) {
         std::stringstream sstr;
-        sstr << FragmentShaderStream.rdbuf();
-        FragmentShaderCode = sstr.str();
-        FragmentShaderStream.close();
+        sstr << fragment_stream.rdbuf();
+        fragment_code = sstr.str();
+        fragment_stream.close();
+    }
+    else {
+        std::cerr << "ERROR: Could not open " << fragment_file_path << std::endl;
+        return 0;
     }
 
-    GLint Result = GL_FALSE;
-    int InfoLogLength;
+    int info_log_length;
 
     // Compile Vertex Shader
-    char const *VertexSourcePointer = VertexShaderCode.c_str();
-    glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
-    glCompileShader(VertexShaderID);
+    const char *vertex_source = vertex_code.c_str();
+    glShaderSource(vertex_id, 1, &vertex_source, NULL);
+    glCompileShader(vertex_id);
 
     // Check Vertex Shader
-    glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> VertexShaderErrorMessage((size_t)InfoLogLength + 1);
-        glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-        std::cerr << &VertexShaderErrorMessage[0] << std::endl;
+    glGetShaderiv(vertex_id, GL_INFO_LOG_LENGTH, &info_log_length);
+    if (info_log_length > 0) {
+        std::vector<char> vertex_error_message((size_t)info_log_length + 1);
+        glGetShaderInfoLog(vertex_id, info_log_length, NULL, &vertex_error_message[0]);
+        std::cerr << &vertex_error_message[0] << std::endl;
     }
 
     // Compile Fragment Shader
-    char const *FragmentSourcePointer = FragmentShaderCode.c_str();
-    glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
-    glCompileShader(FragmentShaderID);
+    const char* FragmentSourcePointer = fragment_code.c_str();
+    glShaderSource(fragment_id, 1, &FragmentSourcePointer, NULL);
+    glCompileShader(fragment_id);
 
     // Check Fragment Shader
-    glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> FragmentShaderErrorMessage((size_t)InfoLogLength + 1);
-        glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-        std::cerr << &FragmentShaderErrorMessage[0] << std::endl;
+    glGetShaderiv(fragment_id, GL_INFO_LOG_LENGTH, &info_log_length);
+    if (info_log_length > 0) {
+        std::vector<char> fragment_error_message((size_t)info_log_length + 1);
+        glGetShaderInfoLog(fragment_id, info_log_length, NULL, &fragment_error_message[0]);
+        std::cerr << &fragment_error_message[0] << std::endl;
     }
 
     // Link the program
-    GLuint ProgramID = glCreateProgram();
-    glAttachShader(ProgramID, VertexShaderID);
-    glAttachShader(ProgramID, FragmentShaderID);
-    glLinkProgram(ProgramID);
+    GLuint program_id = glCreateProgram();
+    glAttachShader(program_id, vertex_id);
+    glAttachShader(program_id, fragment_id);
+    glLinkProgram(program_id);
 
     // Check the program
-    glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-    glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> ProgramErrorMessage((size_t)InfoLogLength + 1);
-        glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-        std::cerr << &ProgramErrorMessage[0] << std::endl;
+    glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &info_log_length);
+    if (info_log_length > 0) {
+        std::vector<char> program_error_message((size_t)info_log_length + 1);
+        glGetProgramInfoLog(program_id, info_log_length, NULL, &program_error_message[0]);
+        std::cerr << &program_error_message[0] << std::endl;
     }
 
-    glDetachShader(ProgramID, VertexShaderID);
-    glDetachShader(ProgramID, FragmentShaderID);
+    glDetachShader(program_id, vertex_id);
+    glDetachShader(program_id, fragment_id);
 
-    glDeleteShader(VertexShaderID);
-    glDeleteShader(FragmentShaderID);
+    glDeleteShader(vertex_id);
+    glDeleteShader(fragment_id);
 
-    return ProgramID;
+    return program_id;
 }
 
-void ShaderManager::load(std::string path) {
+void ShaderManager::load(const std::string& path) {
     std::string qualified_path = get_asset_dir() + "shaders/" + path;
     std::string vertex = qualified_path + "/vertex.glsl";
     std::string fragment = qualified_path + "/fragment.glsl";
