@@ -1,5 +1,6 @@
-#include <glm/gtx/transform.hpp>
 #include "camera.h"
+
+#include <glm/gtx/transform.hpp>
 
 using glm::vec2, glm::vec3;
 

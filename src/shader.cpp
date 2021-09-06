@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace bsg2 {
+Shader::Shader(GLuint program) : program(program) {}
 
 // Adapted from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path) {
@@ -93,7 +94,7 @@ GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path
     return program_id;
 }
 
-void ShaderManager::load(const std::string& path) {
+void ShaderManager::load(std::string path) {
     std::string qualified_path = get_asset_dir() + "shaders/" + path;
     std::string vertex = qualified_path + "/vertex.glsl";
     std::string fragment = qualified_path + "/fragment.glsl";

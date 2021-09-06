@@ -1,7 +1,6 @@
 #include "asset_manager.h"
 
 #include <sys/stat.h>
-
 #include <iostream>
 
 namespace bsg2 {

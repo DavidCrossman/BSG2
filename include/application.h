@@ -1,10 +1,9 @@
 #pragma once
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <functional>
 #include <vector>
-
 #include "camera.h"
 
 namespace bsg2 {
@@ -19,15 +18,20 @@ struct WindowConfiguration {
 };
 
 class Application {
+	float m_delta, m_fps;
+	unsigned long long m_frame_count;
+	const float MAX_DELTA;
+	const int FRAME_TIME;
 protected:
-	GLFWwindow* window; // * const ?
-	float fps;
+	GLFWwindow* const window;
+	virtual void frame() = 0;
 public:
-	Application(GLFWwindow* window);
+	Application(const WindowConfiguration& config);
+	Application(const Application& other) = delete;
 	virtual ~Application();
-	virtual void frame(int frame_count, float delta) = 0;
-	friend void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config);
+	void run();
+	inline float delta() const { return m_delta; }
+	inline float fps() const { return m_fps; }
+	inline unsigned long long frame_count() const { return m_frame_count; }
 };
-
-void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config = WindowConfiguration());
 }
