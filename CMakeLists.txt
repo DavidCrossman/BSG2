@@ -20,8 +20,7 @@ set(BSG2_SOURCES
             "src/camera.cpp"
             "src/shader.cpp"
             "src/sleep_util.cpp"
-            "src/texture.cpp"
-            "src/texture_manager.cpp")
+            "src/texture.cpp")
 
 set(BSG2_HEADERS 
             "include/application.h"
@@ -31,7 +30,6 @@ set(BSG2_HEADERS
             "include/shader.h"
             "include/sleep_util.h"
             "include/texture.h"
-            "include/texture_manager.h"
             "include/vertex.h")
 
 add_library(bsg2 STATIC ${BSG2_SOURCES})

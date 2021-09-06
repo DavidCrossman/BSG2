@@ -1,8 +1,8 @@
 #pragma once
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-
 #include "shader.h"
 #include "texture.h"
 #include "vertex.h"
@@ -14,18 +14,17 @@ class Batch {
     glm::vec4* vbo_colour_mapped;
     glm::vec2* vbo_tex_coords_mapped;
     GLuint* ibo_mapped;
-
 public:
-    const Shader* shader;
+    Shader* shader;
     glm::mat4 combined;
-    Batch(const Shader* shader);
+    Batch(Shader* shader);
     Batch(const Batch& other) = delete;
     ~Batch();
     void begin();
     void end();
     void prepare(int vertices, int indices);
     void set_texture(GLuint texture_id);
-    void set_texture(const Texture* texture);
+    void set_texture(const Texture& texture);
     GLuint add_vertex(const glm::vec2& pos, const glm::vec4& colour, const glm::vec2& tex_coords, float depth = 0);
     GLuint add_vertex(const Vertex& v);
     void draw_vertex(GLuint vertex_index);

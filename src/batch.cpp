@@ -7,7 +7,7 @@ using glm::vec2, glm::vec3, glm::vec4;
 namespace bsg2 {
 static constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
 
-Batch::Batch(const Shader* shader)
+Batch::Batch(Shader* shader)
     : combined(1.0),
       vertex_count(0),
       indices_drawn(0),
@@ -111,7 +111,7 @@ void Batch::set_texture(GLuint texture_id) {
     glUniform1i(glGetUniformLocation(shader->program, "tex"), 0);
 }
 
-void Batch::set_texture(const Texture* texture) { set_texture(texture->id); }
+void Batch::set_texture(const Texture& texture) { set_texture(texture.id); }
 
 GLuint Batch::add_vertex(const Vertex& v) {
     return add_vertex(v.pos, v.colour, v.tex_coords, v.depth);

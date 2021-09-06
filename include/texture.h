@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
+#include "asset_manager.h"
 
 namespace bsg2 {
 class Texture {
@@ -12,5 +13,9 @@ public:
     void set_min_filter(GLuint min_filter) const;
     void set_horizontal_wrap(GLuint horizontal_wrap) const;
     void set_verical_wrap(GLuint vertical_wrap) const;
+};
+
+class TextureManager : public AssetManager<const Texture> {
+    void load(std::string path) override;
 };
 }

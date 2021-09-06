@@ -1,3 +1,5 @@
+#include "sleep_util.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #pragma comment (lib, "winmm.lib")
@@ -5,8 +7,6 @@
 #include <chrono>
 #include <thread>
 #endif
-
-#include "sleep_util.h"
 
 namespace bsg2 {
 SleepManager::SleepManager() {

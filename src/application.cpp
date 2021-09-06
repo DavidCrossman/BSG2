@@ -9,20 +9,13 @@
 #include <vector>
 #include <algorithm>
 #include <SOIL2/SOIL2.h>
-
 #include "batch.h"
 #include "shader.h"
 #include "sleep_util.h"
-#include "texture_manager.h"
 #include "vertex.h"
 
 namespace bsg2 {
-
-Application::Application(GLFWwindow* window) : window(window), fps(-1) {}
-
-Application::~Application() {}
-
-GLFWwindow* create_window(WindowConfiguration config) {
+GLFWwindow* const create_window(const WindowConfiguration& config) {
     glewExperimental = true;
     if (!glfwInit()) {
         std::cerr << "ERROR: Could not initialise GLFW" << std::endl;
@@ -34,7 +27,7 @@ GLFWwindow* create_window(WindowConfiguration config) {
     glfwWindowHint(GLFW_SAMPLES, config.msaa_samples);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(config.width, config.height, config.name, config.fullscreen_monitor, nullptr);
+    GLFWwindow* const window = glfwCreateWindow(config.width, config.height, config.name, config.fullscreen_monitor, nullptr);
 
     if (!window) {
         glfwTerminate();
@@ -63,38 +56,42 @@ GLFWwindow* create_window(WindowConfiguration config) {
     return window;
 }
 
-void execute(std::function<Application* (GLFWwindow*)> create_application, WindowConfiguration config) {
-    GLFWwindow* window = create_window(config);
+Application::Application(const WindowConfiguration& config) : window(create_window(config)), m_fps(-1),
+        MAX_DELTA(config.max_delta), FRAME_TIME(config.frame_time_ms), m_frame_count(0), m_delta(-1) {
+    glfwSetWindowUserPointer(window, this);
+}
 
-    Application* app = create_application(window);
-    glfwSetWindowUserPointer(window, app);
+Application::~Application() {
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
 
+void Application::run() {
     SleepManager sleep_manager;
     constexpr int FRAMES_FOR_FPS = 100;
-    const float MAX_DELTA = config.max_delta;
-    std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(config.frame_time_ms);
-    unsigned long long frame_count = 0;
+    std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(FRAME_TIME);
     auto last_frame = std::chrono::high_resolution_clock::now();
     auto last_fps_update = std::chrono::high_resolution_clock::now();
 
     bool window_should_close = false;
     while (!window_should_close) {
-        frame_count++;
+        m_frame_count++;
 
         auto now = std::chrono::high_resolution_clock::now();
         auto end = now + min_frame_time;
         auto diff = now - last_frame;
         last_frame = now;
 
-        if (frame_count % FRAMES_FOR_FPS == 0) {
+        if (m_frame_count % FRAMES_FOR_FPS == 0) {
             std::chrono::duration<double> time_since_fps_update = now - last_fps_update;
             last_fps_update = now;
-            app->fps = FRAMES_FOR_FPS / time_since_fps_update.count();
+            m_fps = FRAMES_FOR_FPS / (float)time_since_fps_update.count();
         }
 
         glfwPollEvents();
 
-        app->frame(frame_count, std::fminf(MAX_DELTA, std::chrono::duration_cast<std::chrono::microseconds>(diff).count() * 0.000001f));
+        m_delta = std::fminf(MAX_DELTA, std::chrono::duration_cast<std::chrono::microseconds>(diff).count() * 0.000001f);
+        frame();
 
         glFinish();
         glfwSwapBuffers(window);
@@ -104,8 +101,5 @@ void execute(std::function<Application* (GLFWwindow*)> create_application, Windo
         int sleep_duration = (int)std::chrono::duration_cast<std::chrono::milliseconds>(end - std::chrono::high_resolution_clock::now()).count();
         if (sleep_duration > 0) sleep_manager.sleep(sleep_duration);
     }
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
 }
 }
