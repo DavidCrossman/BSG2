@@ -32,7 +32,7 @@ void TestApp::frame() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    batch.combined = cam.combined;
+    batch.combined = cam.combined();
     batch.begin();
     batch.set_texture(squares);
     batch.draw_rect({ vec2(0.1, 0.1), vec4(1), vec2(0, 0) }, { vec2(0.5, 0.5), vec4(1), vec2(1, 1) });

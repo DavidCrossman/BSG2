@@ -17,7 +17,7 @@ public:
     AssetManager(const AssetManager& other) = delete;
     ~AssetManager();
     virtual void load(std::string path) = 0;
-    T& get(const std::string& path) const;
+    T& get(const std::string& path);
     T& load_get(const std::string& path);
 };
 
@@ -32,7 +32,7 @@ inline AssetManager<T>::~AssetManager() {
 }
 
 template <class T>
-inline T& AssetManager<T>::get(const std::string& path) const {
+inline T& AssetManager<T>::get(const std::string& path) {
     return *assets.find(path)->second;
 }
 
