@@ -1,9 +1,9 @@
-﻿cmake_minimum_required(VERSION 3.10)
+﻿cmake_minimum_required(VERSION 3.8)
 
 project(bsg2 VERSION 1.0)
 include(GNUInstallDirs)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(GLEW REQUIRED)
@@ -36,7 +36,7 @@ add_library(bsg2 STATIC ${BSG2_SOURCES})
 target_link_libraries(bsg2 PRIVATE GLEW::GLEW glfw glm soil2)
 
 set(CUSTOM_INSTALL_DIR ${PROJECT_SOURCE_DIR}/../../Libraries/bsg2)
-install(TARGETS bsg2 ARCHIVE DESTINATION ${CUSTOM_INSTALL_DIR}/lib)
+install(TARGETS bsg2 ARCHIVE DESTINATION ${CUSTOM_INSTALL_DIR}/lib/${CMAKE_BUILD_TYPE})
 install(FILES ${BSG2_HEADERS} DESTINATION ${CUSTOM_INSTALL_DIR}/include/bsg2)
 
 add_executable(bsg2_example ${BSG2_SOURCES} "examples/test_app/main.cpp" "examples/test_app/test_app.cpp")
