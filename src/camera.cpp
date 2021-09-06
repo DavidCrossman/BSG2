@@ -5,12 +5,14 @@
 using glm::vec2, glm::vec3;
 
 namespace bsg2 {
-Camera::Camera(): projection(1.0), view(1.0), combined(1.0), aspect_ratio(1) {
+Camera::Camera(): m_projection(1.0), m_view(1.0), m_combined(1.0), aspect_ratio(1) {
 	update();
 }
 
+Camera::~Camera() {}
+
 void Camera::update() {
-	combined = projection * view;
+	m_combined = m_projection * m_view;
 }
 
 OrthographicCamera::OrthographicCamera(vec2 pos, float rotation, float zoom, float max_depth):
@@ -19,8 +21,12 @@ OrthographicCamera::OrthographicCamera(vec2 pos, float rotation, float zoom, flo
 }
 
 void OrthographicCamera::update() {
-	view = glm::translate(vec3(-pos, 0)) * glm::rotate(rotation, vec3(0, 0, -1));
-	projection = glm::ortho(-zoom * aspect_ratio, zoom * aspect_ratio, -zoom, zoom, -max_depth, max_depth);
+	rotation = std::fmodf(rotation, glm::pi<float>() * 2);
+	if (rotation < 0) rotation += 2 * glm::pi<float>();
+
+	m_view = glm::translate(vec3(-pos, 0)) * glm::rotate(rotation, vec3(0, 0, -1));
+	m_projection = glm::ortho(-zoom * aspect_ratio, zoom * aspect_ratio, -zoom, zoom, -max_depth, max_depth);
+
 	Camera::update();
 }
 }
