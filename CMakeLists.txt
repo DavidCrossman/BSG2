@@ -20,7 +20,8 @@ set(BSG2_SOURCES
             "src/camera.cpp"
             "src/shader.cpp"
             "src/sleep_util.cpp"
-            "src/texture.cpp")
+            "src/texture.cpp"
+            "src/viewport.cpp")
 
 set(BSG2_HEADERS 
             "include/application.h"
@@ -30,7 +31,8 @@ set(BSG2_HEADERS
             "include/shader.h"
             "include/sleep_util.h"
             "include/texture.h"
-            "include/vertex.h")
+            "include/vertex.h"
+            "include/viewport.h")
 
 add_library(bsg2 STATIC ${BSG2_SOURCES})
 target_link_libraries(bsg2 PRIVATE GLEW::GLEW glfw glm soil2)
