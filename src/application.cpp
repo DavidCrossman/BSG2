@@ -15,7 +15,7 @@
 #include "vertex.h"
 
 namespace bsg2 {
-GLFWwindow* const create_window(const WindowConfiguration& config) {
+GLFWwindow* const create_window(const ApplicationConfiguration& config) {
     glewExperimental = true;
     if (!glfwInit()) {
         std::cerr << "ERROR: Could not initialise GLFW" << std::endl;
@@ -26,8 +26,8 @@ GLFWwindow* const create_window(const WindowConfiguration& config) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, config.gl_version_minor);
     glfwWindowHint(GLFW_SAMPLES, config.msaa_samples);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* const window = glfwCreateWindow(config.width, config.height, config.name, config.fullscreen_monitor, nullptr);
+    
+    GLFWwindow* const window = glfwCreateWindow(config.width, config.height, config.name, config.fullscreen_monitor, config.share_window);
 
     if (!window) {
         glfwTerminate();
@@ -56,7 +56,7 @@ GLFWwindow* const create_window(const WindowConfiguration& config) {
     return window;
 }
 
-Application::Application(const WindowConfiguration& config) : window(create_window(config)), m_fps(-1),
+Application::Application(const ApplicationConfiguration& config) : window(create_window(config)), m_fps(-1),
         MAX_DELTA(config.max_delta), FRAME_TIME(config.frame_time_ms), m_frame_count(0), m_delta(-1) {
     glfwSetWindowUserPointer(window, this);
 }

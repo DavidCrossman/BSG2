@@ -9,9 +9,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     app->resize(width, height);
 }
 
-TestApp::TestApp(const bsg2::WindowConfiguration& config) : Application(config),
+TestApp::TestApp(const bsg2::ApplicationConfiguration& config) : Application(config),
         batch(&shaders.load_get("base")), squares(textures.load_get("squares.png")),
-        view(std::make_unique<bsg2::OrthographicCamera>(), config.width, config.height, 100, 100) {
+        view(std::make_unique<bsg2::OrthographicCamera>(), config.width, config.height, 1080, 720) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -40,6 +40,6 @@ void TestApp::frame() {
     batch.combined = view.camera().combined();
     batch.begin();
     batch.set_texture(squares);
-    batch.draw_rect({ vec2(0, 0), vec4(1), vec2(0, 0) }, { vec2(100, 100), vec4(1), vec2(1, 1) });
+    batch.draw_rect({ vec2(0, 0), vec4(1), vec2(0, 0) }, { vec2(1, 1), vec4(1), vec2(1, 1) });
     batch.end();
 }

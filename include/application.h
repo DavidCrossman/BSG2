@@ -7,16 +7,21 @@
 #include "camera.h"
 
 namespace bsg2 {
-struct WindowConfiguration {
-	WindowConfiguration() : width(1024), height(768), min_width(320), min_height(200), max_width(GLFW_DONT_CARE), max_height(GLFW_DONT_CARE),
-		frame_time_ms(16), name("Window"), gl_version_major(3), gl_version_minor(3), msaa_samples(4),
-		fullscreen_monitor(nullptr), max_delta(0.05f), icon_path("") {}
-	int width, height, min_width, min_height, max_width, max_height, frame_time_ms, gl_version_major, gl_version_minor, msaa_samples;
-	float max_delta;
-	const char *name, *icon_path;
-	GLFWmonitor* fullscreen_monitor;
+struct ApplicationConfiguration {
+	int width = 1024, height = 768, min_width = 320, min_height = 200, max_width = GLFW_DONT_CARE,
+		max_height = GLFW_DONT_CARE, frame_time_ms = 16, gl_version_major = 3, gl_version_minor = 3, msaa_samples = 4;
+	float max_delta = 0.05;
+	const char *name = "Window", *icon_path = "";
+	GLFWmonitor* fullscreen_monitor = nullptr;
+	GLFWwindow* share_window = nullptr;
 };
 
+/**
+* The base application class that manages its GLFWwindow pointer and repeatedly
+* calls its frame() method until it is destroyed.
+*
+* Extend this to create your own application.
+*/
 class Application {
 	float m_delta, m_fps;
 	unsigned long long m_frame_count;
@@ -24,14 +29,19 @@ class Application {
 	const int FRAME_TIME;
 protected:
 	GLFWwindow* const window;
+	//! A routinely called method. Put rendering and update code here.
 	virtual void frame() = 0;
 public:
-	Application(const WindowConfiguration& config);
+	Application(const ApplicationConfiguration& config);
 	Application(const Application& other) = delete;
 	virtual ~Application();
+	//! Begins the application loop.
 	void run();
+	//! \return The number of seconds the last frame() call took.
 	inline float delta() const { return m_delta; }
+	//! \return The average number of times frame() is called per second.
 	inline float fps() const { return m_fps; }
+	//! \return The total number of times frame() has been called since the application began.
 	inline unsigned long long frame_count() const { return m_frame_count; }
 };
 }

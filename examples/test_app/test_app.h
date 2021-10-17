@@ -13,7 +13,7 @@ class TestApp : public bsg2::Application {
 	const bsg2::Texture& squares;
 	void frame() override;
 public:
-	TestApp(const bsg2::WindowConfiguration& config = bsg2::WindowConfiguration());
+	TestApp(const bsg2::ApplicationConfiguration& config = bsg2::ApplicationConfiguration());
 	~TestApp() override;
 	void resize(int width, int height);
 };
