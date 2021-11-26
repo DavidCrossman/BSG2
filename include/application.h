@@ -10,7 +10,7 @@ namespace bsg2 {
 struct ApplicationConfiguration {
 	int width = 1024, height = 768, min_width = 320, min_height = 200, max_width = GLFW_DONT_CARE,
 		max_height = GLFW_DONT_CARE, frame_time_ms = 16, gl_version_major = 3, gl_version_minor = 3, msaa_samples = 4;
-	float max_delta = 0.05;
+	float max_delta = 0.05f;
 	const char *name = "Window", *icon_path = "";
 	GLFWmonitor* fullscreen_monitor = nullptr;
 	GLFWwindow* share_window = nullptr;

@@ -94,8 +94,10 @@ GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path
     return program_id;
 }
 
+ShaderManager::ShaderManager(const std::string& asset_dir) : AssetManager(asset_dir) {}
+
 void ShaderManager::load(std::string path) {
-    std::string qualified_path = get_asset_dir() + "shaders/" + path;
+    std::string qualified_path = m_asset_dir + path;
     std::string vertex = qualified_path + "/vertex.glsl";
     std::string fragment = qualified_path + "/fragment.glsl";
     GLuint program = load_shaders(vertex.c_str(), fragment.c_str());

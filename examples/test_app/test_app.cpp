@@ -10,6 +10,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 TestApp::TestApp(const bsg2::ApplicationConfiguration& config) : Application(config),
+        textures("examples/test_app/assets/textures/"), shaders("examples/test_app/assets/shaders/"),
         batch(&shaders.load_get("base")), squares(textures.load_get("squares.png")),
         view(std::make_unique<bsg2::OrthographicCamera>(), config.width, config.height, 1080, 720) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

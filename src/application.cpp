@@ -39,7 +39,7 @@ GLFWwindow* const create_window(const ApplicationConfiguration& config) {
 
     if (config.icon_path != "") {
         GLFWimage icons[1];
-        icons[0].pixels = SOIL_load_image((get_asset_dir() + "textures/" + config.icon_path).c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+        icons[0].pixels = SOIL_load_image(find_full_dir(std::string("textures/") + config.icon_path).c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
         glfwSetWindowIcon(window, 1, icons);
         SOIL_free_image_data(icons[0].pixels);
     }

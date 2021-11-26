@@ -15,9 +15,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 set(BSG2_SOURCES 
             "src/application.cpp"
-            "src/asset_manager.cpp"
             "src/batch.cpp"
             "src/camera.cpp"
+            "src/file_util.cpp"
             "src/shader.cpp"
             "src/sleep_util.cpp"
             "src/texture.cpp"
@@ -28,6 +28,7 @@ set(BSG2_HEADERS
             "include/asset_manager.h"
             "include/batch.h"
             "include/camera.h"
+            "include/file_util.h"
             "include/shader.h"
             "include/sleep_util.h"
             "include/texture.h"

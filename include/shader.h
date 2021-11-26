@@ -12,6 +12,8 @@ public:
 };
 
 class ShaderManager : public AssetManager<Shader> {
+public:
+    ShaderManager(const std::string& asset_dir = "assets/shaders/");
     void load(std::string path) override;
 };
 }
