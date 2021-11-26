@@ -1,8 +1,6 @@
 #include "test_app.h"
 
 int main(int argc, const char** argv) {
-    bsg2::initialise_asset_managers("examples/test_app/assets/");
-
     bsg2::ApplicationConfiguration config;
 
     config.name = "BSG2";

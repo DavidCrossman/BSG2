@@ -2,43 +2,38 @@
 
 #include <map>
 #include <string>
+#include <iostream>
+#include "file_util.h"
 
 namespace bsg2 {
-void initialise_asset_managers(const std::string& asset_dir = "assets/");
-const std::string& get_asset_dir();
-
 template <class T>
 class AssetManager {
 protected:
     std::map<std::string, T*> assets;
-
+    std::string m_asset_dir;
 public:
-    AssetManager();
-    AssetManager(const AssetManager& other) = delete;
-    ~AssetManager();
-    virtual void load(std::string path) = 0;
-    T& get(const std::string& path);
-    T& load_get(const std::string& path);
-};
-
-template <class T>
-inline AssetManager<T>::AssetManager() {}
-
-template <class T>
-inline AssetManager<T>::~AssetManager() {
-    for (const auto& kv : assets) {
-        delete kv.second;
+    AssetManager(const std::string& asset_dir = "assets/") {
+        set_asset_dir(asset_dir);
     }
-}
-
-template <class T>
-inline T& AssetManager<T>::get(const std::string& path) {
-    return *assets.find(path)->second;
-}
-
-template <class T>
-inline T& AssetManager<T>::load_get(const std::string& path) {
-    if (assets.find(path) == assets.end()) load(path);
-    return *assets.find(path)->second;
-}
+    AssetManager(const AssetManager& other) = delete;
+    ~AssetManager() {
+        for (const auto& kv : assets) {
+            delete kv.second;
+        }
+    }
+    const std::string& asset_dir() const {
+        return m_asset_dir;
+    }
+    void set_asset_dir(const std::string& asset_dir) {
+        m_asset_dir = find_full_dir(asset_dir);
+    }
+    virtual void load(std::string path) = 0;
+    T& get(const std::string& path) {
+        return *assets.find(path)->second;
+    }
+    T& load_get(const std::string& path) {
+        if (assets.find(path) == assets.end()) load(path);
+        return *assets.find(path)->second;
+    }
+};
 }

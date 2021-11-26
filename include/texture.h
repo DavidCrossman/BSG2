@@ -16,6 +16,8 @@ public:
 };
 
 class TextureManager : public AssetManager<const Texture> {
+public:
+    TextureManager(const std::string& asset_dir = "assets/textures/");
     void load(std::string path) override;
 };
 }
