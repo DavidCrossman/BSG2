@@ -7,16 +7,16 @@ using glm::vec2, glm::vec3, glm::vec4;
 namespace bsg2 {
 static constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
 
-Batch::Batch(Shader* shader)
-    : combined(1.0),
-      vertex_count(0),
-      indices_drawn(0),
-      vbo_pos_mapped(nullptr),
-      vbo_colour_mapped(nullptr),
-      vbo_tex_coords_mapped(nullptr),
-      ibo_mapped(nullptr),
-      texture(-1),
-      shader(shader) {
+Batch::Batch(Shader* shader) :
+        combined(1.0),
+        vertex_count(0),
+        indices_drawn(0),
+        vbo_pos_mapped(nullptr),
+        vbo_colour_mapped(nullptr),
+        vbo_tex_coords_mapped(nullptr),
+        ibo_mapped(nullptr),
+        texture(-1),
+        shader(shader) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 

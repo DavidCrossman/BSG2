@@ -9,11 +9,6 @@
 
 namespace bsg2 {
 class Batch {
-    GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, vertex_count, indices_drawn, texture;
-    glm::vec3* vbo_pos_mapped;
-    glm::vec4* vbo_colour_mapped;
-    glm::vec2* vbo_tex_coords_mapped;
-    GLuint* ibo_mapped;
 public:
     Shader* shader;
     glm::mat4 combined;
@@ -31,5 +26,11 @@ public:
     void draw_rect(const Vertex& low, const Vertex& high);
     void draw_tri(const Vertex& v0, const Vertex& v1, const Vertex& v2);
     void draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
+private:
+    GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, vertex_count, indices_drawn, texture;
+    glm::vec3* vbo_pos_mapped;
+    glm::vec4* vbo_colour_mapped;
+    glm::vec2* vbo_tex_coords_mapped;
+    GLuint* ibo_mapped;
 };
 }
