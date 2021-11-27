@@ -8,9 +8,6 @@
 namespace bsg2 {
 template <class T>
 class AssetManager {
-protected:
-    std::map<std::string, T*> assets;
-    std::string m_asset_dir;
 public:
     AssetManager(const std::string& asset_dir = "assets/") {
         set_asset_dir(asset_dir);
@@ -35,5 +32,8 @@ public:
         if (assets.find(path) == assets.end()) load(path);
         return *assets.find(path)->second;
     }
+protected:
+    std::map<std::string, T*> assets;
+    std::string m_asset_dir;
 };
 }

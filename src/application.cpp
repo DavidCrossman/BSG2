@@ -37,9 +37,11 @@ GLFWwindow* const create_window(const ApplicationConfiguration& config) {
 
     glfwSetWindowSizeLimits(window, config.min_width, config.min_height, config.max_width, config.max_height);
 
-    if (config.icon_path != "") {
+    if (!config.icon_path.empty()) {
         GLFWimage icons[1];
-        icons[0].pixels = SOIL_load_image(find_full_dir(std::string("textures/") + config.icon_path).c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
+        std::size_t index = config.icon_path.find_last_of('/') + 1;
+        std::string dir = find_full_dir(config.icon_path.substr(0, index)) + config.icon_path.substr(index);
+        icons[0].pixels = SOIL_load_image(dir.c_str(), &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
         glfwSetWindowIcon(window, 1, icons);
         SOIL_free_image_data(icons[0].pixels);
     }
@@ -51,7 +53,7 @@ GLFWwindow* const create_window(const ApplicationConfiguration& config) {
         glfwTerminate();
         std::cerr << "ERROR: Could not initialise GLEW, error code " << glewInitResult << std::endl;
         std::exit(3);
-    }
+    } 
 
     return window;
 }
