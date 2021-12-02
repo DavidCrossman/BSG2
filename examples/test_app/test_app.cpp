@@ -27,7 +27,7 @@ void TestApp::resize(int width, int height) {
 }
 
 void TestApp::frame() {
-    view.camera().rotation -= .01f;
+    //view.camera().rotation -= .01f;
     view.camera().update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -41,6 +41,6 @@ void TestApp::frame() {
     batch.combined = view.camera().combined();
     batch.begin();
     batch.set_texture(squares);
-    batch.draw_rect({ vec2(0, 0), vec4(1), vec2(0, 0) }, { vec2(1, 1), vec4(1), vec2(1, 1) });
+    batch.draw_rect(vec2(0.2f), 0.2f, 0.3f, 3.14159265f * frame_count() / 200);
     batch.end();
 }
