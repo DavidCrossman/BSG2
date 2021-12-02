@@ -133,8 +133,10 @@ void Batch::draw_rect(const Vertex& low, const Vertex& high) {
     prepare(4, 6);
 
 	GLint i0 = add_vertex(low);
-	GLint i1 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f, { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
-	GLint i2 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f, { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
+	GLint i1 = add_vertex({ high.pos.x, low.pos.y }, (low.colour + high.colour) * 0.5f,
+        { high.tex_coords.x, low.tex_coords.y }, (low.depth + high.depth) * 0.5f);
+	GLint i2 = add_vertex({ low.pos.x, high.pos.y }, (low.colour + high.colour) * 0.5f,
+        { low.tex_coords.x, high.tex_coords.y }, (low.depth + high.depth) * 0.5f);
 	GLint i3 = add_vertex(high);
 
 	draw_vertex(i0);
@@ -143,6 +145,25 @@ void Batch::draw_rect(const Vertex& low, const Vertex& high) {
 	draw_vertex(i1);
 	draw_vertex(i2);
 	draw_vertex(i3);
+}
+
+void Batch::draw_rect(const glm::vec2& centre, float width, float height, float rotation,
+        const glm::vec4& colour, const vec2& tex_coords_low, const vec2& tex_coords_high, float depth) {
+    prepare(4, 6);
+
+    glm::mat2 rot_mat = { { cosf(rotation), sinf(rotation) }, { -sinf(rotation), cosf(rotation) } };
+
+    GLint i0 = add_vertex(centre + 0.5f * rot_mat * vec2(-width, -height), colour, tex_coords_low, depth);
+    GLint i1 = add_vertex(centre + 0.5f * rot_mat * vec2(width, -height), colour, { tex_coords_high.x, tex_coords_low.y }, depth);
+    GLint i2 = add_vertex(centre + 0.5f * rot_mat * vec2(-width, height), colour, { tex_coords_low.x, tex_coords_high.y }, depth);
+    GLint i3 = add_vertex(centre + 0.5f * rot_mat * vec2(width, height), colour, tex_coords_high, depth);
+
+    draw_vertex(i0);
+    draw_vertex(i1);
+    draw_vertex(i2);
+    draw_vertex(i1);
+    draw_vertex(i2);
+    draw_vertex(i3);
 }
 
 void Batch::draw_tri(const Vertex& v0, const Vertex& v1, const Vertex& v2) {
