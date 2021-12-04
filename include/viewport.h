@@ -6,8 +6,8 @@
 namespace bsg2 {
 class Viewport {
 public:
-	float world_width, world_height;
-	Viewport(std::unique_ptr<Camera> camera, int x, int y, int width, int height, float world_width, float world_height);
+	float aspect_ratio;
+	Viewport(std::unique_ptr<Camera> camera, int x, int y, int width, int height, float aspect_ratio);
 	virtual void update(int width, int height) = 0;
 	inline int x() const { return m_x; }
 	inline int y() const { return m_y; }
@@ -20,7 +20,7 @@ protected:
 
 class FitViewport : public Viewport {
 public:
-	FitViewport(std::unique_ptr<OrthographicCamera> camera, int width, int height, float world_width, float world_height);
+	FitViewport(std::unique_ptr<OrthographicCamera> camera, int width, int height, float aspect_ratio);
 	void update(int width, int height) override;
 	OrthographicCamera& camera();
 };
