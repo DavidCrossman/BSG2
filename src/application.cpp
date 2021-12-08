@@ -104,7 +104,7 @@ void Application::run() {
     }
 }
 
-void Application::exit() {
+void Application::stop() {
     m_should_exit = true;
 }
 }
