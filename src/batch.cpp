@@ -2,7 +2,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
-using glm::vec2, glm::vec3, glm::vec4;
+using glm::vec2, glm::vec3, glm::vec4, glm::mat2;
 
 namespace bsg2 {
 static constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
@@ -147,11 +147,11 @@ void Batch::draw_rect(const Vertex& low, const Vertex& high) {
 	draw_vertex(i3);
 }
 
-void Batch::draw_rect(const glm::vec2& centre, float width, float height, float rotation,
-        const glm::vec4& colour, const vec2& tex_coords_low, const vec2& tex_coords_high, float depth) {
+void Batch::draw_rect(const vec2& centre, float width, float height, float rotation,
+        const vec4& colour, const vec2& tex_coords_low, const vec2& tex_coords_high, float depth) {
     prepare(4, 6);
 
-    glm::mat2 rot_mat = { { cosf(rotation), sinf(rotation) }, { -sinf(rotation), cosf(rotation) } };
+    mat2 rot_mat = { { cosf(rotation), sinf(rotation) }, { -sinf(rotation), cosf(rotation) } };
 
     GLint i0 = add_vertex(centre + 0.5f * rot_mat * vec2(-width, -height), colour, tex_coords_low, depth);
     GLint i1 = add_vertex(centre + 0.5f * rot_mat * vec2(width, -height), colour, { tex_coords_high.x, tex_coords_low.y }, depth);
