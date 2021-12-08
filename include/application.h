@@ -31,7 +31,7 @@ public:
 	//! Begins the application loop.
 	void run();
 	//! Exits the application loop.
-	void exit();
+	void stop();
 	//! \return The number of seconds the last frame() call took.
 	inline float delta() const { return m_delta; }
 	//! \return The average number of times frame() is called per second.
