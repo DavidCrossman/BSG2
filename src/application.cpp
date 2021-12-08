@@ -58,7 +58,7 @@ GLFWwindow* const create_window(const ApplicationConfiguration& config) {
     return window;
 }
 
-Application::Application(const ApplicationConfiguration& config) : window(create_window(config)), m_fps(-1),
+Application::Application(const ApplicationConfiguration& config) : window(create_window(config)), m_should_exit(false), m_fps(-1),
         MAX_DELTA(config.max_delta), FRAME_TIME(config.frame_time_ms), m_frame_count(0), m_delta(-1) {
     glfwSetWindowUserPointer(window, this);
 }
@@ -75,8 +75,7 @@ void Application::run() {
     auto last_frame = std::chrono::high_resolution_clock::now();
     auto last_fps_update = std::chrono::high_resolution_clock::now();
 
-    bool window_should_close = false;
-    while (!window_should_close) {
+    while (!m_should_exit) {
         m_frame_count++;
 
         auto now = std::chrono::high_resolution_clock::now();
@@ -98,10 +97,14 @@ void Application::run() {
         glFinish();
         glfwSwapBuffers(window);
 
-        if (glfwWindowShouldClose(window)) window_should_close = true;
+        if (glfwWindowShouldClose(window)) m_should_exit = true;
 
         int sleep_duration = (int)std::chrono::duration_cast<std::chrono::milliseconds>(end - std::chrono::high_resolution_clock::now()).count();
         if (sleep_duration > 0) sleep_manager.sleep(sleep_duration);
     }
+}
+
+void Application::exit() {
+    m_should_exit = true;
 }
 }

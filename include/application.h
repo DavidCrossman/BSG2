@@ -30,6 +30,8 @@ public:
 	virtual ~Application();
 	//! Begins the application loop.
 	void run();
+	//! Exits the application loop.
+	void exit();
 	//! \return The number of seconds the last frame() call took.
 	inline float delta() const { return m_delta; }
 	//! \return The average number of times frame() is called per second.
@@ -41,6 +43,7 @@ protected:
 	//! A routinely called method. Put rendering and update code here.
 	virtual void frame() = 0;
 private:
+	bool m_should_exit;
 	float m_delta, m_fps;
 	unsigned long long m_frame_count;
 	const float MAX_DELTA;
