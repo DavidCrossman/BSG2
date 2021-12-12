@@ -18,6 +18,11 @@ TestApp::TestApp(const bsg2::ApplicationConfiguration& config) : Application(con
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    srand(12);
+    for (int i = 0; i < 20; i++) {
+        vertices.push_back(bsg2::Vertex(vec2(i / 20.f, (rand() % 1000) / 2000.f), vec4(i / 20.f, i / 20.f, i / 20.f, 1), vec2(0)));
+    }
 }
 
 TestApp::~TestApp() {}
@@ -41,6 +46,8 @@ void TestApp::frame() {
     batch.combined = view.camera().combined();
     batch.begin();
     batch.set_texture(squares);
-    batch.draw_rect(vec2(0.2f), 0.2f, 0.3f, 3.14159265f * frame_count() / 200);
+    batch.draw_tri_strip({ bsg2::Vertex(vec2(0), vec4(1), vec2(1)), bsg2::Vertex(vec2(0, 1), vec4(1), vec2(1)), bsg2::Vertex(vec2(1), vec4(1), vec2(1)) });
+    batch.draw_tri_strip(vertices);
+    batch.draw_rect(vec2(-0.2f), 0.2f, 0.3f, 3.14159265f * frame_count() / 200);
     batch.end();
 }

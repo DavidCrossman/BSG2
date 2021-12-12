@@ -1,5 +1,6 @@
 #include "batch.h"
 
+#include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
 using glm::vec2, glm::vec3, glm::vec4, glm::mat2;
@@ -188,5 +189,28 @@ void Batch::draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, cons
     draw_vertex(i0);
     draw_vertex(i2);
     draw_vertex(i3);
+}
+
+void Batch::draw_tri_strip(const std::vector<Vertex>& vertices) {
+    size_t count = vertices.size();
+    if (count < 3) return;
+
+    prepare(count, (count - 2) * 3);
+
+    std::vector<GLint> indices;
+    indices.reserve(count);
+    for (const Vertex& v : vertices) {
+        indices.push_back(add_vertex(v));
+    }
+    
+    for (size_t i = 2; i < count; ++i) {
+        draw_vertex(indices[i - 2]);
+        draw_vertex(indices[i - 1]);
+        draw_vertex(indices[i]);
+    }
+}
+
+void Batch::draw_tri_strip(const std::initializer_list<Vertex>& vertices) {
+    draw_tri_strip(std::vector(vertices));
 }
 }
