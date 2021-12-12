@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <glm/glm.hpp>
 #include "../include/application.h"
 #include "../include/batch.h"
@@ -16,5 +17,6 @@ private:
 	bsg2::FitViewport view;
 	bsg2::TextureManager textures;
 	const bsg2::Texture& squares;
+	std::vector<bsg2::Vertex> vertices;
 	void frame() override;
 };
