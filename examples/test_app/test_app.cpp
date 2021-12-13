@@ -21,7 +21,13 @@ TestApp::TestApp(const bsg2::ApplicationConfiguration& config) : Application(con
 
     srand(12);
     for (int i = 0; i < 20; i++) {
-        vertices.push_back(bsg2::Vertex(vec2(i / 20.f, (rand() % 1000) / 2000.f), vec4(i / 20.f, i / 20.f, i / 20.f, 1), vec2(0)));
+        strip_vertices.push_back(bsg2::Vertex(vec2(i / 20.f, (rand() % 1000) / 2000.f), vec4(i / 20.f, i / 20.f, i / 20.f, 1), vec2(0)));
+    }
+    int vert_num = 100;
+    for (int i = 0; i < vert_num; i++) {
+        fan_vertices.push_back(bsg2::Vertex(vec2(cosf((i / (vert_num / 2.f)) * 3.14159265359f),
+            sinf((i / (vert_num / 2.f)) * 3.14159265359f)) * 0.5f + vec2(-.35f, .45f),
+            vec4(((i + (2 * vert_num / 3)) % vert_num) / (float)vert_num, ((i + (vert_num / 3)) % vert_num) / (float)vert_num, i / (float)vert_num, 1), vec2(1)));
     }
 }
 
@@ -47,7 +53,8 @@ void TestApp::frame() {
     batch.begin();
     batch.set_texture(squares);
     batch.draw_tri_strip({ bsg2::Vertex(vec2(0), vec4(1), vec2(1)), bsg2::Vertex(vec2(0, 1), vec4(1), vec2(1)), bsg2::Vertex(vec2(1), vec4(1), vec2(1)) });
-    batch.draw_tri_strip(vertices);
+    batch.draw_tri_strip(strip_vertices);
+    batch.draw_tri_fan(fan_vertices);
     batch.draw_rect(vec2(-0.2f), 0.2f, 0.3f, 3.14159265f * frame_count() / 200);
     batch.end();
 }
