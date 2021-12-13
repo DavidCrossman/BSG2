@@ -192,7 +192,7 @@ void Batch::draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, cons
 }
 
 void Batch::draw_tri_strip(const std::vector<Vertex>& vertices) {
-    size_t count = vertices.size();
+    int count = (int)vertices.size();
     if (count < 3) return;
 
     prepare(count, (count - 2) * 3);
@@ -215,7 +215,7 @@ void Batch::draw_tri_strip(const std::initializer_list<Vertex>& vertices) {
 }
 
 void Batch::draw_tri_fan(const std::vector<Vertex>& vertices) {
-    size_t count = vertices.size();
+    int count = (int)vertices.size();
     if (count < 3) return;
 
     prepare(count, (count - 2) * 3);
