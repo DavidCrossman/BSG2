@@ -213,4 +213,27 @@ void Batch::draw_tri_strip(const std::vector<Vertex>& vertices) {
 void Batch::draw_tri_strip(const std::initializer_list<Vertex>& vertices) {
     draw_tri_strip(std::vector(vertices));
 }
+
+void Batch::draw_tri_fan(const std::vector<Vertex>& vertices) {
+    size_t count = vertices.size();
+    if (count < 3) return;
+
+    prepare(count, (count - 2) * 3);
+
+    std::vector<GLint> indices;
+    indices.reserve(count);
+    for (const Vertex& v : vertices) {
+        indices.push_back(add_vertex(v));
+    }
+
+    for (size_t i = 2; i < count; ++i) {
+        draw_vertex(indices[0]);
+        draw_vertex(indices[i - 1]);
+        draw_vertex(indices[i]);
+    }
+}
+
+void Batch::draw_tri_fan(const std::initializer_list<Vertex>& vertices) {
+    draw_tri_fan(std::vector(vertices));
+}
 }

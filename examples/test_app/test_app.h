@@ -17,6 +17,6 @@ private:
 	bsg2::FitViewport view;
 	bsg2::TextureManager textures;
 	const bsg2::Texture& squares;
-	std::vector<bsg2::Vertex> vertices;
+	std::vector<bsg2::Vertex> strip_vertices, fan_vertices;
 	void frame() override;
 };

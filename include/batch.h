@@ -32,6 +32,8 @@ public:
     void draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, const Vertex& v3);
     void draw_tri_strip(const std::vector<Vertex>& vertices);
     void draw_tri_strip(const std::initializer_list<Vertex>& vertices);
+    void draw_tri_fan(const std::vector<Vertex>& vertices);
+    void draw_tri_fan(const std::initializer_list<Vertex>& vertices);
 private:
     GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, vertex_count, indices_drawn, texture;
     glm::vec3* vbo_pos_mapped;
