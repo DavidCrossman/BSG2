@@ -6,18 +6,10 @@
 using glm::vec2, glm::vec3, glm::vec4, glm::mat2;
 
 namespace bsg2 {
-static constexpr int MAX_VERTEX_COUNT = 16384, MAX_INDEX_COUNT = 32768;
+static constexpr int maxVertexCount = 16384, maxIndexCount = 32768;
 
-Batch::Batch(Shader* shader) :
-        combined(1.0),
-        vertex_count(0),
-        indices_drawn(0),
-        vbo_pos_mapped(nullptr),
-        vbo_colour_mapped(nullptr),
-        vbo_tex_coords_mapped(nullptr),
-        ibo_mapped(nullptr),
-        texture(-1),
-        shader(shader) {
+Batch::Batch(Shader* shader) : combined(1.0), vertex_count(0), indices_drawn(0), vbo_pos_mapped(nullptr),
+        vbo_colour_mapped(nullptr), vbo_tex_coords_mapped(nullptr), ibo_mapped(nullptr), texture(-1), shader(shader) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -26,15 +18,15 @@ Batch::Batch(Shader* shader) :
     glGenBuffers(1, &vbo_tex_coords);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
-    glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_COUNT * sizeof(vec3), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec3), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_colour);
-    glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_COUNT * sizeof(vec4), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec4), nullptr, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_tex_coords);
-    glBufferData(GL_ARRAY_BUFFER, MAX_VERTEX_COUNT * sizeof(vec2), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec2), nullptr, GL_STATIC_DRAW);
 
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, MAX_INDEX_COUNT * sizeof(GLuint), nullptr, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, maxIndexCount * sizeof(GLuint), nullptr, GL_STATIC_DRAW);
 }
 
 Batch::~Batch() {
@@ -94,7 +86,7 @@ void Batch::end() {
 }
 
 void Batch::prepare(int vertices, int indices) {
-    if (indices_drawn + indices > MAX_INDEX_COUNT || vertex_count + vertices > MAX_VERTEX_COUNT) {
+    if (indices_drawn + indices > maxIndexCount || vertex_count + vertices > maxVertexCount) {
         end();
         begin();
     }

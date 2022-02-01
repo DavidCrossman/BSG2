@@ -1,8 +1,7 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
-#include <iostream>
 #include "file_util.h"
 
 namespace bsg2 {
@@ -33,7 +32,7 @@ public:
         return *assets.find(path)->second;
     }
 protected:
-    std::map<std::string, T*> assets;
+    std::unordered_map<std::string, T*> assets;
     std::string m_asset_dir;
 };
 }

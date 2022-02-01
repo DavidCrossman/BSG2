@@ -59,7 +59,7 @@ GLFWwindow* const create_window(const ApplicationConfiguration& config) {
 }
 
 Application::Application(const ApplicationConfiguration& config) : window(create_window(config)), m_should_exit(false), m_fps(-1),
-        MAX_DELTA(config.max_delta), FRAME_TIME(config.frame_time_ms), m_frame_count(0), m_delta(-1) {
+        max_delta(config.max_delta), frame_time(config.frame_time_ms), m_frame_count(0), m_delta(-1) {
     glfwSetWindowUserPointer(window, this);
 }
 
@@ -70,8 +70,8 @@ Application::~Application() {
 
 void Application::run() {
     SleepManager sleep_manager;
-    constexpr int FRAMES_FOR_FPS = 100;
-    std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(FRAME_TIME);
+    constexpr int framesForFps = 100;
+    std::chrono::duration<double> min_frame_time = std::chrono::milliseconds(frame_time);
     auto last_frame = std::chrono::high_resolution_clock::now();
     auto last_fps_update = std::chrono::high_resolution_clock::now();
 
@@ -83,15 +83,15 @@ void Application::run() {
         auto diff = now - last_frame;
         last_frame = now;
 
-        if (m_frame_count % FRAMES_FOR_FPS == 0) {
+        if (m_frame_count % framesForFps == 0) {
             std::chrono::duration<double> time_since_fps_update = now - last_fps_update;
             last_fps_update = now;
-            m_fps = FRAMES_FOR_FPS / (float)time_since_fps_update.count();
+            m_fps = framesForFps / (float)time_since_fps_update.count();
         }
 
         glfwPollEvents();
 
-        m_delta = std::fminf(MAX_DELTA, std::chrono::duration_cast<std::chrono::microseconds>(diff).count() * 0.000001f);
+        m_delta = std::fminf(max_delta, std::chrono::duration_cast<std::chrono::microseconds>(diff).count() * 0.000001f);
         frame();
 
         glFinish();
