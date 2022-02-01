@@ -7,6 +7,7 @@
 #include "camera.h"
 
 namespace bsg2 {
+///A configuration structure used to set the initial values of an Application.
 struct ApplicationConfiguration {
 	int width = 1024, height = 768, min_width = 320, min_height = 200, max_width = GLFW_DONT_CARE,
 		max_height = GLFW_DONT_CARE, frame_time_ms = 16, gl_version_major = 3, gl_version_minor = 3, msaa_samples = 4;
@@ -19,7 +20,7 @@ struct ApplicationConfiguration {
 
 /**
 * The base application class that manages its GLFWwindow pointer and repeatedly
-* calls its frame() method until it is destroyed.
+* calls its frame() method until it is stopped or destroyed.
 *
 * Extend this to create your own application.
 */
@@ -46,7 +47,7 @@ private:
 	bool m_should_exit;
 	float m_delta, m_fps;
 	unsigned long long m_frame_count;
-	const float MAX_DELTA;
-	const int FRAME_TIME;
+	float max_delta;
+	int frame_time;
 };
 }
