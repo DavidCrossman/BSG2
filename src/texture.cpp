@@ -5,7 +5,9 @@
 namespace bsg2 {
 Texture::Texture(GLuint id) : id(id) {}
 
-Texture::~Texture() { glDeleteTextures(1, &id); }
+Texture::~Texture() {
+    glDeleteTextures(1, &id);
+}
 
 void Texture::set_mag_filter(GLuint mag_filter) const {
     glBindTexture(GL_TEXTURE_2D, id);

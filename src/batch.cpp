@@ -8,8 +8,9 @@ using glm::vec2, glm::vec3, glm::vec4, glm::mat2;
 namespace bsg2 {
 static constexpr int maxVertexCount = 16384, maxIndexCount = 32768;
 
-Batch::Batch(Shader* shader) : combined(1.0), vertex_count(0), indices_drawn(0), vbo_pos_mapped(nullptr),
-        vbo_colour_mapped(nullptr), vbo_tex_coords_mapped(nullptr), ibo_mapped(nullptr), texture(-1), shader(shader) {
+Batch::Batch(Shader& shader) : combined(1.0), vertex_count(0), indices_drawn(0),
+        vbo_pos_mapped(nullptr), vbo_colour_mapped(nullptr), vbo_tex_coords_mapped(nullptr),
+        ibo_mapped(nullptr), texture(-1), shader(&shader) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -27,6 +28,13 @@ Batch::Batch(Shader* shader) : combined(1.0), vertex_count(0), indices_drawn(0),
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, maxIndexCount * sizeof(GLuint), nullptr, GL_STATIC_DRAW);
+
+    float pixels[4] = { 1.f, 1.f, 1.f, 1.f };
+    glGenTextures(1, &default_texture);
+    glBindTexture(GL_TEXTURE_2D, default_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, pixels);
 }
 
 Batch::~Batch() {
@@ -35,9 +43,10 @@ Batch::~Batch() {
     glDeleteBuffers(1, &vbo_colour);
     glDeleteBuffers(1, &vbo_tex_coords);
     glDeleteBuffers(1, &ibo);
+    glDeleteTextures(1, &default_texture);
 }
 
-void Batch::begin() {
+void Batch::restart() {
     vertex_count = indices_drawn = 0;
 
     glUseProgram(shader->program);
@@ -50,6 +59,28 @@ void Batch::begin() {
     vbo_tex_coords_mapped = (vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     ibo_mapped = (GLuint*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+}
+
+void Batch::begin() {
+    begin(default_texture);
+}
+
+void Batch::begin(GLuint texture_id) {
+    restart();
+
+    texture = texture_id;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(glGetUniformLocation(shader->program, "tex"), 0);
+}
+
+void Batch::begin(const Texture& texture) {
+    begin(texture.id);
+}
+
+void Batch::begin(const FrameBuffer& frame_buffer) {
+    begin(frame_buffer.colour_texture);
 }
 
 void Batch::end() {
@@ -88,23 +119,33 @@ void Batch::end() {
 void Batch::prepare(int vertices, int indices) {
     if (indices_drawn + indices > maxIndexCount || vertex_count + vertices > maxVertexCount) {
         end();
-        begin();
+        restart();
     }
 }
 
 void Batch::set_texture(GLuint texture_id) {
     if (texture_id == texture) return;
-    texture = texture_id;
 
     end();
-    begin();
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(glGetUniformLocation(shader->program, "tex"), 0);
+    begin(texture_id);
 }
 
-void Batch::set_texture(const Texture& texture) { set_texture(texture.id); }
+void Batch::set_texture(const Texture& texture) {
+    set_texture(texture.id);
+}
+
+void Batch::use_default_texture() {
+    set_texture(default_texture);
+}
+
+void Batch::set_shader(Shader& shader) {
+    this->shader = &shader;
+}
+
+void Batch::read_frame_buffer(const FrameBuffer& frame_buffer) {
+    end();
+    begin(frame_buffer);
+}
 
 GLuint Batch::add_vertex(const Vertex& v) {
     return add_vertex(v.pos, v.colour, v.tex_coords, v.depth);
