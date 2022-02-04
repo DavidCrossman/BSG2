@@ -6,12 +6,16 @@ namespace bsg2 {
 Viewport::Viewport(std::unique_ptr<Camera> camera, int x, int y, int width, int height, float aspect_ratio) :
 		m_camera(std::move(camera)), aspect_ratio(aspect_ratio), m_x(x), m_y(y), m_width(width), m_height(height) {}
 
-FitViewport::FitViewport(std::unique_ptr<OrthographicCamera> camera, int width, int height, float aspect_ratio) :
-		Viewport(std::move(camera), 0, 0, 0, 0, aspect_ratio) {
-	update(width, height);
+void Viewport::apply() {
+	glViewport(m_x, m_y, m_width, m_height);
 }
 
-void FitViewport::update(int width, int height) {
+FitViewport::FitViewport(std::unique_ptr<OrthographicCamera> camera, int width, int height, float aspect_ratio) :
+		Viewport(std::move(camera), 0, 0, 0, 0, aspect_ratio) {
+	resize(width, height);
+}
+
+void FitViewport::resize(int width, int height) {
 	if (width > height * aspect_ratio) {
 		m_x = int((width - height * aspect_ratio) / 2);
 		m_y = 0;
@@ -28,7 +32,7 @@ void FitViewport::update(int width, int height) {
 	m_camera->aspect_ratio = aspect_ratio;
 	m_camera->update();
 
-	glViewport(m_x, m_y, m_width, m_height);
+	apply();
 }
 
 OrthographicCamera& FitViewport::camera() {

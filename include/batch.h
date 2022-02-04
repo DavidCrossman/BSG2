@@ -8,20 +8,27 @@
 #include "shader.h"
 #include "texture.h"
 #include "vertex.h"
+#include "frame_buffer.h"
 
 namespace bsg2 {
 class Batch {
 public:
-    Shader* shader;
     glm::mat4 combined;
-    Batch(Shader* shader);
+    Batch(Shader& shader);
     Batch(const Batch& other) = delete;
     ~Batch();
+    void restart();
     void begin();
+    void begin(GLuint texture_id);
+    void begin(const Texture& texture);
+    void begin(const FrameBuffer& frame_buffer);
     void end();
     void prepare(int vertices, int indices);
     void set_texture(GLuint texture_id);
     void set_texture(const Texture& texture);
+    void use_default_texture();
+    void set_shader(Shader& shader);
+    void read_frame_buffer(const FrameBuffer& frame_buffer);
     GLuint add_vertex(const glm::vec2& pos, const glm::vec4& colour, const glm::vec2& tex_coords, float depth = 0);
     GLuint add_vertex(const Vertex& v);
     void draw_vertex(GLuint vertex_index);
@@ -40,5 +47,7 @@ private:
     glm::vec4* vbo_colour_mapped;
     glm::vec2* vbo_tex_coords_mapped;
     GLuint* ibo_mapped;
+    Shader* shader;
+    GLuint default_texture;
 };
 }
