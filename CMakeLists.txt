@@ -37,12 +37,17 @@ set(BSG2_HEADERS
             "include/vertex.h"
             "include/viewport.h")
 
-add_library(bsg2 STATIC ${BSG2_SOURCES})
-target_link_libraries(bsg2 PRIVATE GLEW::GLEW glfw glm soil2)
+if (WIN32)
+    add_library(bsg2 STATIC ${BSG2_SOURCES})
+elseif (UNIX)
+    add_library(bsg2 SHARED ${BSG2_SOURCES})
+endif ()
+
+target_link_libraries(bsg2 PRIVATE GLEW::GLEW glfw soil2)
 
 set(CUSTOM_INSTALL_DIR ${PROJECT_SOURCE_DIR}/../../Libraries/bsg2)
 install(TARGETS bsg2 ARCHIVE DESTINATION ${CUSTOM_INSTALL_DIR}/lib/${CMAKE_BUILD_TYPE})
 install(FILES ${BSG2_HEADERS} DESTINATION ${CUSTOM_INSTALL_DIR}/include/bsg2)
 
 add_executable(bsg2_example ${BSG2_SOURCES} "examples/test_app/main.cpp" "examples/test_app/test_app.cpp")
-target_link_libraries(bsg2_example PRIVATE GLEW::GLEW glfw glm soil2)
+target_link_libraries(bsg2_example PRIVATE GLEW::GLEW glfw soil2)

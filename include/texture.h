@@ -12,7 +12,7 @@ public:
     void set_mag_filter(GLuint mag_filter) const;
     void set_min_filter(GLuint min_filter) const;
     void set_horizontal_wrap(GLuint horizontal_wrap) const;
-    void set_verical_wrap(GLuint vertical_wrap) const;
+    void set_vertical_wrap(GLuint vertical_wrap) const;
 };
 
 class TextureManager : public AssetManager<const Texture> {

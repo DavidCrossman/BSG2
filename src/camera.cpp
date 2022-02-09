@@ -21,7 +21,7 @@ OrthographicCamera::OrthographicCamera(vec2 pos, float rotation, float zoom, flo
 }
 
 void OrthographicCamera::update() {
-	rotation = std::fmodf(rotation, glm::pi<float>() * 2);
+	rotation = std::fmod(rotation, glm::pi<float>() * 2);
 	if (rotation < 0) rotation += 2 * glm::pi<float>();
 
 	m_view = glm::rotate(rotation, vec3(0, 0, -1)) * glm::translate(vec3(-pos, 0));
