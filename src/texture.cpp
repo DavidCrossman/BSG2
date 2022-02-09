@@ -27,7 +27,7 @@ void Texture::set_horizontal_wrap(GLuint horizontal_wrap) const {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Texture::set_verical_wrap(GLuint vertical_wrap) const {
+void Texture::set_vertical_wrap(GLuint vertical_wrap) const {
     glBindTexture(GL_TEXTURE_2D, id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, vertical_wrap);
     glBindTexture(GL_TEXTURE_2D, 0);
