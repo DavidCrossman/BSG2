@@ -36,6 +36,7 @@ void Texture::set_vertical_wrap(GLuint vertical_wrap) {
 TextureManager::TextureManager(const std::string& asset_dir) : AssetManager(asset_dir) {}
 
 void TextureManager::load(std::string path) {
+    if (assets.find(path) != assets.end()) return;
     std::string qualified_path = asset_dir + path;
     assets.emplace(path, new Texture(SOIL_load_OGL_texture(qualified_path.c_str(), SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
         SOIL_FLAG_GL_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_COMPRESS_TO_DXT)));
