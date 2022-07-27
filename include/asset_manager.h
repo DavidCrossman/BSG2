@@ -35,7 +35,7 @@ public:
     }
 
     T& load_get(const std::string& path) {
-        if (assets.find(path) == assets.end()) load(path);
+        load(path);
         return *assets.find(path)->second;
     }
 
