@@ -11,9 +11,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 TestApp::TestApp(const bsg2::ApplicationConfiguration& config) : Application(config),
         textures("examples/test_app/assets/textures/"), shaders("examples/test_app/assets/shaders/"),
-        base(shaders.load_get("base")), inversion(shaders.load_get("inversion")), batch(base),
-        squares(textures.load_get("squares.png")), view(std::make_unique<bsg2::OrthographicCamera>(),
-        config.width, config.height, 1080/720.f), frame_buffer(config.width, config.height, config.msaa_samples) {
+        inversion(shaders.load_get("inversion")), squares(textures.load_get("squares.png")),
+        view(std::make_unique<bsg2::OrthographicCamera>(), config.width, config.height, 1080/720.f),
+        frame_buffer(config.width, config.height, config.msaa_samples) {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -46,8 +46,7 @@ void TestApp::frame() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    batch.set_shader(base);
-
+    batch.use_default_shader();
     batch.combined = glm::mat4(1);
     batch.begin(squares);
     batch.draw_rect({ vec2(-1), vec4(.4f, .4f, .4f, 1), vec2(0) }, { vec2(1), vec4(.4f, .4f, .4f, 1), vec2(0) });
@@ -75,7 +74,7 @@ void TestApp::frame() {
     batch.draw_rect({ vec2(-1, -.5f), vec4(1), vec2(0) }, { vec2(0, .5f), vec4(1), vec2(1) });
     batch.end();
 
-    batch.set_shader(base);
+    batch.use_default_shader();
     batch.restart();
     batch.draw_rect({ vec2(0, -.5f), vec4(1), vec2(0) }, { vec2(1, .5f), vec4(1), vec2(1) });
     batch.end();

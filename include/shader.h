@@ -9,6 +9,7 @@ class Shader {
 public:
     GLuint program;
     Shader(GLuint program);
+    ~Shader();
 };
 
 class ShaderManager : public AssetManager<Shader> {

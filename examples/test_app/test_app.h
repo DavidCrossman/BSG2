@@ -14,7 +14,7 @@ public:
 	void resize(int width, int height);
 private:
 	bsg2::ShaderManager shaders;
-	bsg2::Shader& base, & inversion;
+	bsg2::Shader& inversion;
 	bsg2::Batch batch;
 	bsg2::FitViewport view;
 	bsg2::FrameBuffer frame_buffer;
