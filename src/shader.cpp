@@ -9,11 +9,15 @@
 namespace bsg2 {
 Shader::Shader(GLuint program) : program(program) {}
 
+Shader::~Shader() {
+    glDeleteProgram(program);
+}
+
 // Adapted from http://www.opengl-tutorial.org/beginners-tutorials/tutorial-2-the-first-triangle/
 GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path) {
     // Create the shaders
-    GLuint vertex_id = glCreateShader(GL_VERTEX_SHADER);
-    GLuint fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
+    GLuint vertex_id = glCreateShader(GL_VERTEX_SHADER),
+        fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
 
     // Read the Vertex Shader code from the file
     std::string vertex_code;
@@ -59,8 +63,8 @@ GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path
     }
 
     // Compile Fragment Shader
-    const char* FragmentSourcePointer = fragment_code.c_str();
-    glShaderSource(fragment_id, 1, &FragmentSourcePointer, NULL);
+    const char* fragment_source = fragment_code.c_str();
+    glShaderSource(fragment_id, 1, &fragment_source, NULL);
     glCompileShader(fragment_id);
 
     // Check Fragment Shader

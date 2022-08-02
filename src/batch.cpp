@@ -8,9 +8,9 @@ using glm::vec2, glm::vec3, glm::vec4, glm::mat2;
 namespace bsg2 {
 static constexpr int maxVertexCount = 16384, maxIndexCount = 32768;
 
-Batch::Batch(Shader& shader) : combined(1.0), vertex_count(0), indices_drawn(0),
+Batch::Batch() : combined(1.0), vertex_count(0), indices_drawn(0),
         vbo_pos_mapped(nullptr), vbo_colour_mapped(nullptr), vbo_tex_coords_mapped(nullptr),
-        ibo_mapped(nullptr), texture(-1), shader(&shader) {
+        ibo_mapped(nullptr), texture(-1) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -35,6 +35,70 @@ Batch::Batch(Shader& shader) : combined(1.0), vertex_count(0), indices_drawn(0),
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_FLOAT, pixels);
+
+    GLuint vertex_id = glCreateShader(GL_VERTEX_SHADER),
+        fragment_id = glCreateShader(GL_FRAGMENT_SHADER);
+
+    const char* vertex_source = R"(
+        #version 330 core
+        layout(location = 0) in vec3 a_pos;
+        layout(location = 1) in vec4 a_colour;
+        layout(location = 2) in vec2 a_tex_coords;
+
+        out vec3 v_pos;
+        out vec4 v_colour;
+        out vec2 v_tex_coords;
+
+        uniform mat4 combined;
+
+        void main() {
+            v_pos = a_pos;
+            v_colour = a_colour;
+            v_tex_coords = a_tex_coords;
+            gl_Position = combined * vec4(a_pos, 1.0);
+        }
+    )", * fragment_source = R"(
+        #version 330 core
+
+        in vec3 v_pos;
+        in vec4 v_colour;
+        in vec2 v_tex_coords;
+
+        out vec4 f_colour;
+
+        uniform sampler2D tex;
+
+        void main() {
+	        f_colour = v_colour * texture(tex, v_tex_coords);
+        }
+    )";
+
+    glShaderSource(vertex_id, 1, &vertex_source, NULL);
+    glCompileShader(vertex_id);
+
+    glShaderSource(fragment_id, 1, &fragment_source, NULL);
+    glCompileShader(fragment_id);
+
+    default_shader = glCreateProgram();
+    glAttachShader(default_shader, vertex_id);
+    glAttachShader(default_shader, fragment_id);
+    glLinkProgram(default_shader);
+
+    glDetachShader(default_shader, vertex_id);
+    glDetachShader(default_shader, fragment_id);
+
+    glDeleteShader(vertex_id);
+    glDeleteShader(fragment_id);
+
+    shader = default_shader;
+}
+
+Batch::Batch(GLuint shader_program) : Batch() {
+    set_shader(shader_program);
+}
+
+Batch::Batch(const Shader& shader) : Batch() {
+    set_shader(shader);
 }
 
 Batch::~Batch() {
@@ -44,12 +108,13 @@ Batch::~Batch() {
     glDeleteBuffers(1, &vbo_tex_coords);
     glDeleteBuffers(1, &ibo);
     glDeleteTextures(1, &default_texture);
+    glDeleteProgram(default_shader);
 }
 
 void Batch::restart() {
     vertex_count = indices_drawn = 0;
 
-    glUseProgram(shader->program);
+    glUseProgram(shader);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
     vbo_pos_mapped = (vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
@@ -72,7 +137,7 @@ void Batch::begin(GLuint texture_id) {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(glGetUniformLocation(shader->program, "tex"), 0);
+    glUniform1i(glGetUniformLocation(shader, "tex"), 0);
 }
 
 void Batch::begin(const Texture& texture) {
@@ -95,7 +160,7 @@ void Batch::end() {
 
     if (!indices_drawn) return;
 
-    glUniformMatrix4fv(glGetUniformLocation(shader->program, "combined"), 1, GL_FALSE, value_ptr(combined));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "combined"), 1, GL_FALSE, value_ptr(combined));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -138,8 +203,16 @@ void Batch::use_default_texture() {
     set_texture(default_texture);
 }
 
-void Batch::set_shader(Shader& shader) {
-    this->shader = &shader;
+void Batch::set_shader(GLuint shader_program) {
+    shader = shader_program;
+}
+
+void Batch::set_shader(const Shader& shader) {
+    set_shader(shader.program);
+}
+
+void Batch::use_default_shader() {
+    set_shader(default_shader);
 }
 
 void Batch::read_frame_buffer(const FrameBuffer& frame_buffer) {

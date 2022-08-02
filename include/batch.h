@@ -14,7 +14,9 @@ namespace bsg2 {
 class Batch {
 public:
     glm::mat4 combined;
-    Batch(Shader& shader);
+    Batch();
+    Batch(GLuint shader_program);
+    Batch(const Shader& shader);
     Batch(const Batch& other) = delete;
     ~Batch();
     void restart();
@@ -27,7 +29,9 @@ public:
     void set_texture(GLuint texture_id);
     void set_texture(const Texture& texture);
     void use_default_texture();
-    void set_shader(Shader& shader);
+    void set_shader(GLuint shader_program);
+    void set_shader(const Shader& shader);
+    void use_default_shader();
     void read_frame_buffer(const FrameBuffer& frame_buffer);
     GLuint add_vertex(const glm::vec2& pos, const glm::vec4& colour, const glm::vec2& tex_coords, float depth = 0);
     GLuint add_vertex(const Vertex& v);
@@ -42,12 +46,11 @@ public:
     void draw_tri_fan(const std::vector<Vertex>& vertices);
     void draw_tri_fan(const std::initializer_list<Vertex>& vertices);
 private:
-    GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, vertex_count, indices_drawn, texture;
+    GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, texture, shader, default_texture, default_shader;
+    int vertex_count, indices_drawn;
     glm::vec3* vbo_pos_mapped;
     glm::vec4* vbo_colour_mapped;
     glm::vec2* vbo_tex_coords_mapped;
     GLuint* ibo_mapped;
-    Shader* shader;
-    GLuint default_texture;
 };
 }
