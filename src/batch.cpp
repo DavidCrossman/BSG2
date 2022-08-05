@@ -9,21 +9,14 @@ namespace bsg2 {
 static constexpr int maxVertexCount = 16384, maxIndexCount = 32768;
 
 Batch::Batch() : combined(1.0), vertex_count(0), indices_drawn(0),
-        vbo_pos_mapped(nullptr), vbo_colour_mapped(nullptr), vbo_tex_coords_mapped(nullptr),
-        ibo_mapped(nullptr), texture(-1) {
+        vbo_mapped(nullptr), ibo_mapped(nullptr), texture(-1) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    glGenBuffers(1, &vbo_pos);
-    glGenBuffers(1, &vbo_colour);
-    glGenBuffers(1, &vbo_tex_coords);
+    glGenBuffers(1, &vbo);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
-    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec3), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colour);
-    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec4), nullptr, GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_tex_coords);
-    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(vec2), nullptr, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, maxVertexCount * sizeof(Vertex), nullptr, GL_STATIC_DRAW);
 
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -103,9 +96,7 @@ Batch::Batch(const Shader& shader) : Batch() {
 
 Batch::~Batch() {
     glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo_pos);
-    glDeleteBuffers(1, &vbo_colour);
-    glDeleteBuffers(1, &vbo_tex_coords);
+    glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ibo);
     glDeleteTextures(1, &default_texture);
     glDeleteProgram(default_shader);
@@ -116,12 +107,8 @@ void Batch::restart() {
 
     glUseProgram(shader);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
-    vbo_pos_mapped = (vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colour);
-    vbo_colour_mapped = (vec4*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_tex_coords);
-    vbo_tex_coords_mapped = (vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    vbo_mapped = (Vertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     ibo_mapped = (GLuint*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
 }
@@ -151,27 +138,21 @@ void Batch::begin(const FrameBuffer& frame_buffer) {
 void Batch::end() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
-    glUnmapBuffer(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colour);
-    glUnmapBuffer(GL_ARRAY_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_tex_coords);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
     if (!indices_drawn) return;
 
-    glUniformMatrix4fv(glGetUniformLocation(shader, "combined"), 1, GL_FALSE, value_ptr(combined));
+    glUniformMatrix4fv(glGetUniformLocation(shader, "combined"), 1, GL_FALSE, glm::value_ptr(combined));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_pos);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_colour);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_tex_coords);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)sizeof(vec3));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(vec3) + sizeof(vec4)));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
     glDrawElements(GL_TRIANGLES, indices_drawn, GL_UNSIGNED_INT, (void*)0);
@@ -225,9 +206,7 @@ GLuint Batch::add_vertex(const Vertex& v) {
 }
 
 GLuint Batch::add_vertex(const vec2& pos, const vec4& colour, const vec2& tex_coords, float depth) {
-    vbo_pos_mapped[vertex_count] = { pos, depth };
-    vbo_colour_mapped[vertex_count] = colour;
-    vbo_tex_coords_mapped[vertex_count] = tex_coords;
+    vbo_mapped[vertex_count] = { pos, colour, tex_coords, depth };
     return vertex_count++;
 }
 
@@ -299,20 +278,19 @@ void Batch::draw_quad(const Vertex& v0, const Vertex& v1, const Vertex& v2, cons
 
 void Batch::draw_tri_strip(const std::vector<Vertex>& vertices) {
     int count = (int)vertices.size();
-    if (count < 3) return;
+    if (count < 3 || count > maxVertexCount) return;
 
     prepare(count, (count - 2) * 3);
 
-    std::vector<GLint> indices;
-    indices.reserve(count);
-    for (const Vertex& v : vertices) {
-        indices.push_back(add_vertex(v));
-    }
-    
+    GLuint first = add_vertex(vertices[0]), second = add_vertex(vertices[1]), third;
+
     for (size_t i = 2; i < count; ++i) {
-        draw_vertex(indices[i - 2]);
-        draw_vertex(indices[i - 1]);
-        draw_vertex(indices[i]);
+        third = add_vertex(vertices[i]);
+        draw_vertex(first);
+        first = second;
+        draw_vertex(second);
+        second = third;
+        draw_vertex(third);
     }
 }
 
@@ -322,20 +300,18 @@ void Batch::draw_tri_strip(const std::initializer_list<Vertex>& vertices) {
 
 void Batch::draw_tri_fan(const std::vector<Vertex>& vertices) {
     int count = (int)vertices.size();
-    if (count < 3) return;
+    if (count < 3 || count > maxVertexCount) return;
 
     prepare(count, (count - 2) * 3);
 
-    std::vector<GLint> indices;
-    indices.reserve(count);
-    for (const Vertex& v : vertices) {
-        indices.push_back(add_vertex(v));
-    }
+    GLuint origin = add_vertex(vertices[0]), previous = add_vertex(vertices[1]), current;
 
     for (size_t i = 2; i < count; ++i) {
-        draw_vertex(indices[0]);
-        draw_vertex(indices[i - 1]);
-        draw_vertex(indices[i]);
+        current = add_vertex(vertices[i]);
+        draw_vertex(origin);
+        draw_vertex(previous);
+        draw_vertex(current);
+        previous = current;
     }
 }
 

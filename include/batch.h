@@ -46,11 +46,9 @@ public:
     void draw_tri_fan(const std::vector<Vertex>& vertices);
     void draw_tri_fan(const std::initializer_list<Vertex>& vertices);
 private:
-    GLuint vao, vbo_pos, vbo_colour, vbo_tex_coords, ibo, texture, shader, default_texture, default_shader;
+    GLuint vao, vbo, ibo, texture, shader, default_texture, default_shader;
     int vertex_count, indices_drawn;
-    glm::vec3* vbo_pos_mapped;
-    glm::vec4* vbo_colour_mapped;
-    glm::vec2* vbo_tex_coords_mapped;
+    Vertex* vbo_mapped;
     GLuint* ibo_mapped;
 };
 }
