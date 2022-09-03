@@ -9,7 +9,7 @@ namespace bsg2 {
 static constexpr int maxVertexCount = 16384, maxIndexCount = 32768;
 
 Batch::Batch() : combined(1.0), vertex_count(0), indices_drawn(0),
-        vbo_mapped(nullptr), ibo_mapped(nullptr), texture(-1) {
+        vbo_mapped(nullptr), ibo_mapped(nullptr), texture(-1), tint(1) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -169,6 +169,18 @@ void Batch::prepare(int vertices, int indices) {
     }
 }
 
+void Batch::set_tint(const glm::vec4& colour) {
+    tint = glm::clamp(colour, vec4(0), vec4(1));
+}
+
+void Batch::set_tint(const glm::vec3& colour) {
+    set_tint({ colour, 1.f });
+}
+
+void Batch::set_tint(float r, float g, float b, float a) {
+    set_tint({ r, g, b, a });
+}
+
 void Batch::set_texture(GLuint texture_id) {
     if (texture_id == texture) return;
 
@@ -206,7 +218,7 @@ GLuint Batch::add_vertex(const Vertex& v) {
 }
 
 GLuint Batch::add_vertex(const vec2& pos, const vec4& colour, const vec2& tex_coords, float depth) {
-    vbo_mapped[vertex_count] = { pos, colour, tex_coords, depth };
+    vbo_mapped[vertex_count] = { pos, colour * tint, tex_coords, depth };
     return vertex_count++;
 }
 

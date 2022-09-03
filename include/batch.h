@@ -26,6 +26,9 @@ public:
     void begin(const FrameBuffer& frame_buffer);
     void end();
     void prepare(int vertices, int indices);
+    void set_tint(const glm::vec4& colour);
+    void set_tint(const glm::vec3& colour);
+    void set_tint(float r, float g, float b, float a = 1.f);
     void set_texture(GLuint texture_id);
     void set_texture(const Texture& texture);
     void use_default_texture();
@@ -50,5 +53,6 @@ private:
     int vertex_count, indices_drawn;
     Vertex* vbo_mapped;
     GLuint* ibo_mapped;
+    glm::vec4 tint;
 };
 }

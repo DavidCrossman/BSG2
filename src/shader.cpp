@@ -50,7 +50,7 @@ GLuint load_shaders(const char* vertex_file_path, const char* fragment_file_path
     int info_log_length;
 
     // Compile Vertex Shader
-    const char *vertex_source = vertex_code.c_str();
+    const char* vertex_source = vertex_code.c_str();
     glShaderSource(vertex_id, 1, &vertex_source, NULL);
     glCompileShader(vertex_id);
 

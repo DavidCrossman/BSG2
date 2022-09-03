@@ -1,18 +1,11 @@
 #include "application.h"
 
 #include <chrono>
-#include <cstdlib>
 #include <glm/glm.hpp>
-#include <iomanip>
 #include <iostream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
 #include <SOIL2/SOIL2.h>
-#include "batch.h"
-#include "shader.h"
+#include "file_util.h"
 #include "sleep_util.h"
-#include "vertex.h"
 
 namespace bsg2 {
 GLFWwindow* const create_window(const ApplicationConfiguration& config) {
