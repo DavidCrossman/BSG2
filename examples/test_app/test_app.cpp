@@ -2,7 +2,7 @@
 
 #include <memory>
 
-using glm::vec2, glm::vec4;
+using glm::vec2, glm::vec3, glm::vec4;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     TestApp* app = (TestApp*)glfwGetWindowUserPointer(window);
@@ -56,7 +56,9 @@ void TestApp::frame() {
     batch.restart();
     batch.draw_rect(vec2(-0.2f), 0.2f, 0.3f, 3.14159265f * frame_count() / 200);
     batch.use_default_texture();
+    batch.set_tint(.5f + .5f * std::sin(frame_count() / 120.f), 1, 1);
     batch.draw_tri_strip({ bsg2::Vertex(vec2(0), vec4(1), vec2(1)), bsg2::Vertex(vec2(0, 1), vec4(1), vec2(1)), bsg2::Vertex(vec2(1), vec4(1), vec2(1)) });
+    batch.set_tint(vec4(1));
     batch.draw_tri_strip(strip_vertices);
     batch.draw_tri_fan(fan_vertices);
     batch.end();

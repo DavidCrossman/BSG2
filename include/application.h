@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
-#include "camera.h"
 
 namespace bsg2 {
 ///A configuration structure used to set the initial values of an Application.
