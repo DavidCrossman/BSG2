@@ -1,3 +1,3 @@
-cmake --build linux-out/Debug
-cmake --build linux-out/Release
-strip --strip-all linux-out/Release/libbsg2.so
+cmake --build out/build/linux-Debug
+cmake --build out/build/linux-Release
+strip --strip-all out/build/linux-Release/libbsg2.so
