@@ -12,5 +12,8 @@ struct Vertex {
 	float depth;
 	glm::vec4 colour;
 	glm::vec2 tex_coords;
+	inline bool operator==(const Vertex& rhs) const {
+		return pos == rhs.pos && depth == rhs.depth && colour == rhs.colour && tex_coords == rhs.tex_coords;
+	}
 };
 }
