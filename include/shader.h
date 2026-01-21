@@ -9,6 +9,7 @@ class Shader {
 public:
     GLuint program;
     Shader(GLuint program);
+    Shader(const Shader& other) = delete;
     ~Shader();
 };
 

@@ -9,6 +9,7 @@ class Texture {
 public:
     GLuint id;
     Texture(GLuint id);
+    Texture(const Texture& other) = delete;
     ~Texture();
     GLint get_width() const;
     GLint get_height() const;

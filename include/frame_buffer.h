@@ -7,6 +7,7 @@ class FrameBuffer {
 	friend class Batch;
 public:
 	FrameBuffer(GLsizei width, GLsizei height, int msaa_samples = 4);
+	FrameBuffer(const FrameBuffer& other) = delete;
 	~FrameBuffer();
 	void resize(GLsizei width, GLsizei height);
 	void bind();
