@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <glm/glm.hpp>
 #include "../include/application.h"
 #include "../include/batch.h"
 #include "../include/viewport.h"

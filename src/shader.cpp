@@ -1,7 +1,6 @@
 #include "shader.h"
 
 #include <fstream>
-#include <glm/glm.hpp>
 #include <iostream>
 #include <sstream>
 #include <vector>

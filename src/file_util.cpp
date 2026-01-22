@@ -1,7 +1,6 @@
 #include "file_util.h"
 
 #include <sys/stat.h>
-#include <iostream>
 
 namespace bsg2 {
 // Returns 1 if the directory exists.

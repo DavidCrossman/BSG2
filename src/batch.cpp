@@ -1,6 +1,7 @@
 #include "batch.h"
 
 #include <vector>
+#include <glm/mat2x2.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 using glm::vec2, glm::vec3, glm::vec4, glm::mat2;

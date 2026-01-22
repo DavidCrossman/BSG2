@@ -2,6 +2,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/transform.hpp>
+#include <glm/vec3.hpp>
 
 using glm::vec2, glm::vec3;
 

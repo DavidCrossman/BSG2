@@ -1,7 +1,6 @@
 #include "application.h"
 
 #include <chrono>
-#include <glm/glm.hpp>
 #include <iostream>
 #include <SOIL2/SOIL2.h>
 #include "file_util.h"

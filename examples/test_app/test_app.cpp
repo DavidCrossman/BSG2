@@ -1,6 +1,9 @@
 #include "test_app.h"
 
 #include <memory>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 using glm::vec2, glm::vec3, glm::vec4;
 

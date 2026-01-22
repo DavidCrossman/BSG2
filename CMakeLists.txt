@@ -22,6 +22,7 @@ set(BSG2_SOURCES
             "src/shader.cpp"
             "src/sleep_util.cpp"
             "src/texture.cpp"
+            "src/vertex.cpp"
             "src/viewport.cpp")
 
 set(BSG2_HEADERS 
